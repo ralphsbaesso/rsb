@@ -1,0 +1,2 @@
+MA = ManagerAccount
+AC = AccountUser
