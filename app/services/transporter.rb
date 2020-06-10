@@ -48,7 +48,6 @@ class Transporter
     if type.nil?
       { data: model }
     elsif type == :items
-
       source = items.page(options[:page]).per(options[:per_page])
 
       {
@@ -110,6 +109,10 @@ class Transporter
     end
 
     super
+  end
+
+  def status_green?
+    self.status == :green
   end
 
   class SystemUser

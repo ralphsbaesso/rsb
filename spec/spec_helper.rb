@@ -103,9 +103,11 @@ RSpec.configure do |config|
   end
 end
 
-require 'support/event_helper'
+require 'support/helpers/event_helper'
+require 'support/helpers/auth_helper'
 
 RSpec.configure do |config|
   config.include EventHelper
+  config.include AuthHelper
 end
 

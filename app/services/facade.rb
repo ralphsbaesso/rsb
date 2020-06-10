@@ -49,6 +49,8 @@ class Facade
     end
 
   rescue Exception => e
+    puts e.message
+    pp e.backtrace
     transporter.add_error_message 'Um erro inesperado aconteceu, tente novamente. Se persistir, entre em contato com o Adminstrador.'
 
     Event.application(
@@ -76,6 +78,8 @@ class Facade
   def check_model(model)
     if model.is_a?(Symbol) or model.is_a? String
       model.to_s.camelize.constantize
+    elsif model.is_a? Class
+      model
     else
       model.class.name.constantize
     end

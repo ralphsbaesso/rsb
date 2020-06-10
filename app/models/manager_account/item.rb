@@ -20,9 +20,10 @@
 
 class ManagerAccount::Item < ApplicationRecord
   belongs_to :account_user
-  has_many :ma_subitems, class_name: 'ManagerAccount::Subitem', foreign_key: :ma_item_id
+  has_many :ma_subitems, class_name: 'ManagerAccount::Subitem', foreign_key: :ma_item_id, autosave: true
 
   alias_attribute :ac, :account_user
+  alias_attribute :subitems, :ma_subitems
   validates_presence_of :name
 
   def self.rules_of_insert

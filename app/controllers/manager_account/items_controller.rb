@@ -1,14 +1,15 @@
-class ManageAccount::ItemsController < ApplicationController
+class ManagerAccount::ItemsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_item, only: [:show, :update, :destroy]
 
   def index
-    t = Transporter.new(current_account_user)
-    items = MA::Item.page(params[:currentPage]).per(params[:currentPerPage])
+    transporter = facade.select MA::Item
 
-    t.items = items
-    # pp t.to_data(:items, page: params[:page], per_page: params[:per_page])
-    render json: t.to_data(:items, page: params[:page], per_page: params[:per_page])
+    if transporter.status_green?
+      render json: transporter.to_data(:items)
+    else
+      render json: { errors: transporter.messages }, status: :unprocessable_entity
+    end
   end
 
   def create
@@ -29,10 +30,9 @@ class ManageAccount::ItemsController < ApplicationController
 
   def destroy
     transporter = facade.delete @item
+    return if transporter.status == :green
 
-    if transporter.status != :green
-      render json: { errors: transporter.messages }, status: :unprocessable_entity
-    end
+    render json: { errors: transporter.messages }, status: :unprocessable_entity
   end
 
   def update

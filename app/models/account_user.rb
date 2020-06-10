@@ -25,4 +25,7 @@ class AccountUser < ApplicationRecord
 
   has_many :ma_items, class_name: 'ManagerAccount::Item'
   has_many :ma_accounts, class_name: 'ManagerAccount::Account'
+  has_many :ma_transactions, class_name: 'ManagerAccount::Transaction'
+
+  has_many :ma_subitems, class_name: 'ManagerAccount::Subitem', through: :ma_items
 end
