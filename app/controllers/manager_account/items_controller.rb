@@ -1,9 +1,8 @@
-class ManagerAccount::ItemsController < ApplicationController
-  before_action :authenticate_user!
+class ManagerAccount::ItemsController < AuthenticatorController
   before_action :set_item, only: [:show, :update, :destroy]
 
   def index
-    transporter = facade.select MA::Item
+    transporter = facade.select ManagerAccount::Item
 
     if transporter.status_green?
       render json: transporter.to_data(:items)
@@ -13,8 +12,8 @@ class ManagerAccount::ItemsController < ApplicationController
   end
 
   def create
-    item = MA::Item.new(item_parameter)
-    item.ac = current_ac
+    item = ManagerAccount::Item.new(item_parameter)
+    item.au = current_ac
     transporter = facade.insert item
 
     if transporter.status == :green
@@ -53,6 +52,6 @@ class ManagerAccount::ItemsController < ApplicationController
   end
 
   def set_item
-    @item = MA::Item.find params[:id]
+    @item = ManagerAccount::Item.find params[:id]
   end
 end

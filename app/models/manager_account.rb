@@ -3,3 +3,5 @@ module ManagerAccount
     'ma_'
   end
 end
+
+MA = ManagerAccount

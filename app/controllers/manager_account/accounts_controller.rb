@@ -2,7 +2,7 @@ class ManagerAccount::AccountsController < AuthenticatorController
   before_action :set_account, only: [:show, :update, :destroy]
 
   def index
-    transporter = facade.select MA::Account
+    transporter = facade.select ManagerAccount::Account
 
     if transporter.status_green?
       render json: transporter.to_data(:items)
@@ -12,8 +12,8 @@ class ManagerAccount::AccountsController < AuthenticatorController
   end
 
   def create
-    account = MA::Account.new(account_parameter)
-    account.ac = current_ac
+    account = ManagerAccount::Account.new(account_parameter)
+    account.au = current_ac
     transporter = facade.insert account
 
     if transporter.status == :green
@@ -48,10 +48,10 @@ class ManagerAccount::AccountsController < AuthenticatorController
   private
 
   def account_parameter
-    params.require(:account).permit(:name, :description)
+    params.require(:account).permit(:name, :description, fields: [])
   end
 
   def set_account
-    @account = MA::Account.find params[:id]
+    @account = ManagerAccount::Account.find params[:id]
   end
 end

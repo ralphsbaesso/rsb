@@ -31,6 +31,8 @@ gem 'rack-cors'
 gem 'devise_token_auth'
 # A Scope & Engine based, clean, powerful, customizable and sophisticated paginator for Ruby webapps
 gem 'kaminari', '~> 1.2'
+# Integration of RubyMoney - Money with Rails
+gem 'money-rails', '~>1.12'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -49,7 +51,7 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 
   gem 'annotate'
-  gem "better_errors"
+  gem 'better_errors'
   gem 'pry-rails'
 end
 

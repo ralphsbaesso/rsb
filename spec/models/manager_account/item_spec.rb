@@ -23,7 +23,7 @@ require 'rails_helper'
 RSpec.describe ManagerAccount::Item, type: :model do
   let!(:user) { create(:user) }
   let!(:account) { create(:account) }
-  let!(:ac) { create(:account_user, user: user, account: account) }
+  let!(:au) { create(:account_user, user: user, account: account) }
 
   describe 'have atrributes' do
     it { is_expected.to respond_to(:name) }
@@ -37,9 +37,9 @@ RSpec.describe ManagerAccount::Item, type: :model do
   describe 'business rules' do
     context 'insert' do
       it 'must save' do
-        item = build(:ma_item, ac: ac, name: Faker::Name.name)
+        item = build(:ma_item, au: au, name: Faker::Name.name)
 
-        t = Facade.new(ac).insert item
+        t = Facade.new(au).insert item
         expect(t.status).to eq(:green)
         expect(MA::Item.count).to eq(1)
         expect(Event.count).to eq(0)
@@ -47,11 +47,11 @@ RSpec.describe ManagerAccount::Item, type: :model do
 
       it "don't must save already exits name", :events do
         name = Faker::Name.name
-        create(:ma_item, ac: ac, name: name)
-        item = build(:ma_item, ac: ac, name: name)
+        create(:ma_item, au: au, name: name)
+        item = build(:ma_item, au: au, name: name)
 
         expect do
-          transporter = Facade.new(ac).insert item
+          transporter = Facade.new(au).insert item
           expect(transporter.status).to eq(:red)
           expect(transporter.messages.count).to eq(1)
         end.to change(MA::Item, :count).by(0)
@@ -62,11 +62,11 @@ RSpec.describe ManagerAccount::Item, type: :model do
 
     context 'update' do
       it 'must update' do
-        item = create(:ma_item, ac: ac, name: Faker::Name.name)
+        item = create(:ma_item, au: au, name: Faker::Name.name)
         name = Faker::Name.name
         item.name = name
 
-        t = Facade.new(ac).update item
+        t = Facade.new(au).update item
         expect(t.status).to eq(:green)
         expect(item.name).to eq(name)
       end
@@ -75,24 +75,25 @@ RSpec.describe ManagerAccount::Item, type: :model do
     context 'delete' do
       it 'decrease one item' do
 
-        item = create(:ma_item, ac: ac)
+        item = create(:ma_item, au: au)
         expect {
-          Facade.new(ac).delete(item)
+          Facade.new(au).delete(item)
         }.to change(MA::Item, :count).by(-1)
 
         expect(Event.count).to eq(0)
       end
 
       it 'return error account with association' do
-        item = create(:ma_item, ac: ac)
-        create(:ma_subitem, ma_item: item)
+        item = create(:ma_item, au: au)
 
-        transport = nil
+        ma_account = create(:ma_account, au: au)
+        create(:ma_transaction, au: au, ma_item: item, ma_account: ma_account)
         expect {
-          transport = Facade.new(ac).delete(item)
+          transporter = Facade.new(au).delete(item)
+          expect(transporter.status).to eq(:red)
         }.to change(MA::Item, :count).by(0)
 
-        expect(transport.status).to eq(:red)
+        expect(Event.count).to eq(0)
       end
     end
 
@@ -100,9 +101,9 @@ RSpec.describe ManagerAccount::Item, type: :model do
 
       it 'return list of items' do
         amount = 10
-        create_list(:ma_item, amount, ac: ac)
+        create_list(:ma_item, amount, au: au)
 
-        transporter = Facade.new(ac).select MA::Item.to_s
+        transporter = Facade.new(au).select MA::Item.to_s
         expect(transporter.items.count).to eq(amount)
       end
     end

@@ -1,19 +1,23 @@
 # == Schema Information
 #
-# Table name: accounts
+# Table name: ma_accounts
 #
-#  id                  :bigint(8)        not null, primary key
-#  description         :string
-#  header_file         :string
-#  ignore_descriptions :text             default("")
-#  name                :string
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  accountant_id       :bigint(8)
+#  id              :bigint           not null, primary key
+#  account_type    :string
+#  description     :string
+#  fields          :jsonb
+#  name            :string
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  account_user_id :bigint
 #
 # Indexes
 #
-#  index_accounts_on_accountant_id  (accountant_id)
+#  index_ma_accounts_on_account_user_id  (account_user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (account_user_id => account_users.id)
 #
 
 require 'rails_helper'
@@ -21,7 +25,7 @@ require 'rails_helper'
 RSpec.describe ManagerAccount::Account, type: :model do
   let!(:user) { create(:user) }
   let!(:account) { create(:account) }
-  let!(:ac) { create(:account_user, user: user, account: account) }
+  let!(:au) { create(:account_user, user: user, account: account) }
 
   describe 'have atrributes' do
     it { is_expected.to respond_to(:name) }
@@ -37,7 +41,7 @@ RSpec.describe ManagerAccount::Account, type: :model do
     context 'insert' do
       it 'increase one account' do
 
-        account = build(:ma_account, ac: ac)
+        account = build(:ma_account, au: au)
         transporter = facade.insert(account)
         expect(transporter.status).to eq(:green)
         expect(MA::Account.count).to eq(1)
@@ -46,7 +50,7 @@ RSpec.describe ManagerAccount::Account, type: :model do
 
     context 'update' do
       it 'modify attributes' do
-        account = create(:ma_account, ac: ac, name: Faker::Name.name)
+        account = create(:ma_account, au: au, name: Faker::Name.name)
         new_name = Faker::FunnyName.name
         new_description = Faker::Book.publisher
 
@@ -62,8 +66,8 @@ RSpec.describe ManagerAccount::Account, type: :model do
 
       it 'return message error update with same name' do
         name = Faker::Name.name
-        create(:ma_account, ac: ac, name: name)
-        account = create(:ma_account, ac: ac, name: Faker::FunnyName.name)
+        create(:ma_account, au: au, name: name)
+        account = create(:ma_account, au: au, name: Faker::FunnyName.name)
 
         account.name = name
         transporter = facade.update account
@@ -75,15 +79,15 @@ RSpec.describe ManagerAccount::Account, type: :model do
     context 'delete' do
       it 'decrease one account' do
 
-        account = create(:ma_account, ac: ac)
+        account = create(:ma_account, au: au)
         expect do
           facade.delete(account)
         end.to change(MA::Account, :count).by(-1)
       end
 
       it 'return error account with association' do
-        account = create(:ma_account, ac: ac)
-        create(:ma_transaction, ac: ac, ma_account: account)
+        account = create(:ma_account, au: au)
+        create(:ma_transaction, au: au, ma_account: account)
 
         transport = nil
         expect {
@@ -98,7 +102,7 @@ RSpec.describe ManagerAccount::Account, type: :model do
 
       it 'return list of items' do
         amount = 10
-        create_list(:ma_account, amount, ac: ac)
+        create_list(:ma_account, amount, au: au)
 
         transporter = facade.select MA::Account.to_s
         expect(transporter.items.count).to eq(amount)
@@ -110,7 +114,7 @@ RSpec.describe ManagerAccount::Account, type: :model do
   private
 
   def facade
-    Facade.new ac
+    Facade.new au
   end
 
 end

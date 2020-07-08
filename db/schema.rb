@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_26_001149) do
+ActiveRecord::Schema.define(version: 2020_07_08_224825) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,9 +46,30 @@ ActiveRecord::Schema.define(version: 2020_03_26_001149) do
     t.index ["account_user_id"], name: "index_events_on_account_user_id"
   end
 
+  create_table "labels", force: :cascade do |t|
+    t.string "name"
+    t.string "original_name"
+    t.string "color"
+    t.string "service"
+    t.bigint "account_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_user_id", "service", "name"], name: "index_labels_on_account_user_id_and_service_and_name"
+    t.index ["account_user_id"], name: "index_labels_on_account_user_id"
+  end
+
+  create_table "labels_ma_transactions", force: :cascade do |t|
+    t.bigint "label_id"
+    t.bigint "ma_transaction_id"
+    t.index ["label_id"], name: "index_labels_ma_transactions_on_label_id"
+    t.index ["ma_transaction_id"], name: "index_labels_ma_transactions_on_ma_transaction_id"
+  end
+
   create_table "ma_accounts", force: :cascade do |t|
     t.string "name"
     t.string "description"
+    t.jsonb "fields", default: []
+    t.string "account_type"
     t.bigint "account_user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -62,15 +83,6 @@ ActiveRecord::Schema.define(version: 2020_03_26_001149) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_user_id"], name: "index_ma_items_on_account_user_id"
-  end
-
-  create_table "ma_subitems", force: :cascade do |t|
-    t.string "name"
-    t.string "description"
-    t.bigint "ma_item_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["ma_item_id"], name: "index_ma_subitems_on_ma_item_id"
   end
 
   create_table "ma_transactions", force: :cascade do |t|
@@ -126,9 +138,11 @@ ActiveRecord::Schema.define(version: 2020_03_26_001149) do
   add_foreign_key "account_users", "accounts"
   add_foreign_key "account_users", "users"
   add_foreign_key "events", "account_users"
+  add_foreign_key "labels", "account_users"
+  add_foreign_key "labels_ma_transactions", "labels"
+  add_foreign_key "labels_ma_transactions", "ma_transactions"
   add_foreign_key "ma_accounts", "account_users"
   add_foreign_key "ma_items", "account_users"
-  add_foreign_key "ma_subitems", "ma_items"
   add_foreign_key "ma_transactions", "account_users"
   add_foreign_key "ma_transactions", "ma_accounts"
 end

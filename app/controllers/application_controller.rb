@@ -5,9 +5,9 @@ class ApplicationController < ActionController::API
 
   def set_current_account_user
     if current_user
-      ac = current_user.account_users.first
-      @current_ac = ac
-      @current_account_user = ac
+      au = current_user.account_users.first
+      @current_ac = au
+      @current_account_user = au
     end
   end
 

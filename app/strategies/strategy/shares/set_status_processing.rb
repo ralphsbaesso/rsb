@@ -1,4 +1,4 @@
-class Strategy::Shares::SetStatusProcessing < AStrategy
+class Strategy::Shares::SetStatusProcessing < Strategy
 
   def process
     model.status = :processing

@@ -1,0 +1,5 @@
+"Conta";"Data_Mov";"Nr_Doc";"Historico";"Valor";"Deb_Cred"
+"number_by_account";"20190102";"018127";"PREST HAB";"676.37";"D"
+"number_by_account";"20190125";"122018";"DEB CESTA";"25.00";"D"
+"number_by_account";"20190131";"000077";"CRED TED";"700.00";"C"
+"number_by_account";"20190131";"019017";"PREST HAB";"677.92";"D"

@@ -43,6 +43,12 @@ pt-BR:
             name:
               blank: não pode ficar em branco
 
+        manager_account/transaction:
+          attributes:
+            ma_account:
+              required: é obrigatório
+
+
     models:
       user: Usuário
 

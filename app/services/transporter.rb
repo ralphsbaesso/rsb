@@ -44,14 +44,14 @@ class Transporter
     @status = :red
   end
 
-  def to_data(type = nil, **options)
+  def to_data(type = nil, json_optons: {}, **options)
     if type.nil?
       { data: model }
     elsif type == :items
       source = items.page(options[:page]).per(options[:per_page])
 
       {
-        data: source,
+        data: source.as_json(json_optons),
         meta: {
           total_count: source.total_count,
           count: source.count,

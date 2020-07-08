@@ -3,7 +3,9 @@
 # Table name: ma_accounts
 #
 #  id              :bigint           not null, primary key
+#  account_type    :string
 #  description     :string
+#  fields          :jsonb
 #  name            :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -22,8 +24,9 @@ class ManagerAccount::Account < ApplicationRecord
   belongs_to :account_user
   has_many :ma_transactions, class_name: 'ManagerAccount::Transaction', foreign_key: :ma_account_id
 
-  alias_attribute :ac, :account_user
+  alias_attribute :au, :account_user
   validates_presence_of :name
+  alias_attribute :type, :account_type
 
   def self.rules_of_insert
     [
@@ -51,6 +54,51 @@ class ManagerAccount::Account < ApplicationRecord
       Strategy::MAAccounts::Filter
 
     ]
+  end
+
+  class Struct
+
+    def self.description_options
+      options.map { |option| [option[:field], option[:description]] }
+    end
+
+    def self.find_field(field)
+      options.find { |f| f == field }
+    end
+
+    def self.options
+      [
+        {
+          field: :transaction_date,
+          description: 'Campo data transação',
+        },
+        {
+          field: :pay_date,
+          description: 'Campo data pagamento',
+        },
+        {
+          field: :ignore,
+          description: 'Ignorar campo'
+        },
+        {
+          field: :value,
+          description: 'Campo valor',
+        },
+        {
+          field: :reverse_value,
+          description: 'Campo valor invertido',
+        },
+        {
+          field: :description,
+          description: 'Campo descrição'
+        },
+        {
+          field: :symbol_of_value,
+          description: 'Simbolo de valor'
+        }
+      ]
+    end
+
   end
 
 end

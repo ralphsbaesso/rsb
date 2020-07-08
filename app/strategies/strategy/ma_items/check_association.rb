@@ -3,11 +3,10 @@ class Strategy::MAItems::CheckAssociation < Strategy
   def process
     item = model
 
-    if item.ma_subitems.count.positive?
-      add_message 'Esse item está associado a um SUBITEM, por tanto não poderá ser apagado!'
+    if item.ma_transactions.limit(1).to_a.present?
+      add_message 'Não pode apagar esse item, existe transações associado a ele.'
       set_status :red
     end
-
   end
 
   def self.my_description

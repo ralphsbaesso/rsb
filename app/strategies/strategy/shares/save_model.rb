@@ -10,7 +10,6 @@ class Strategy::Shares::SaveModel < Strategy
         end
         set_status :red
       end
-      true
     else
       set_status :red
     end

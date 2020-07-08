@@ -30,11 +30,48 @@
 #  fk_rails_...  (ma_account_id => ma_accounts.id)
 #
 
+require_relative '../manager_account'
+
 class ManagerAccount::Transaction < ApplicationRecord
   belongs_to :ma_item, optional: true, class_name: 'ManagerAccount::Item'
-  belongs_to :ma_subitem, optional: true, class_name: 'ManagerAccount::Subitem'
   belongs_to :ma_account, class_name: 'ManagerAccount::Account'
   belongs_to :account_user
 
-  alias_attribute :ac, :account_user
+  has_and_belongs_to_many :labels, foreign_key: :ma_transaction_id
+
+  alias_attribute :au, :account_user
+  alias_attribute :item, :ma_item
+  monetize :price_cents
+
+  def self.rules_of_insert
+    [
+      Strategy::MATransactions::CheckTransactionDate,
+      Strategy::MATransactions::CheckPayDate,
+      Strategy::MATransactions::CheckAccount,
+      Strategy::Shares::SaveModel
+    ]
+  end
+
+  def self.rules_of_update
+    [
+      Strategy::MATransactions::CheckTransactionDate,
+      Strategy::MATransactions::CheckPayDate,
+      Strategy::MATransactions::CheckAccount,
+      Strategy::Shares::SaveModel
+    ]
+  end
+
+  def self.rules_of_delete
+    [
+      Strategy::Shares::DestroyModel
+    ]
+  end
+
+  def self.rules_of_select
+    [
+      Strategy::MATransactions::Filter
+
+    ]
+  end
+
 end
