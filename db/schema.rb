@@ -49,12 +49,13 @@ ActiveRecord::Schema.define(version: 2020_07_08_224825) do
   create_table "labels", force: :cascade do |t|
     t.string "name"
     t.string "original_name"
+    t.string "app"
     t.string "color"
-    t.string "service"
+    t.string "background_color"
     t.bigint "account_user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_user_id", "service", "name"], name: "index_labels_on_account_user_id_and_service_and_name"
+    t.index ["account_user_id", "app", "name"], name: "index_labels_on_account_user_id_and_app_and_name"
     t.index ["account_user_id"], name: "index_labels_on_account_user_id"
   end
 

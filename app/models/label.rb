@@ -2,19 +2,20 @@
 #
 # Table name: labels
 #
-#  id              :bigint           not null, primary key
-#  color           :string
-#  name            :string
-#  original_name   :string
-#  service         :string
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  account_user_id :bigint
+#  id               :bigint           not null, primary key
+#  app              :string
+#  background_color :string
+#  color            :string
+#  name             :string
+#  original_name    :string
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  account_user_id  :bigint
 #
 # Indexes
 #
-#  index_labels_on_account_user_id                       (account_user_id)
-#  index_labels_on_account_user_id_and_service_and_name  (account_user_id,service,name)
+#  index_labels_on_account_user_id                   (account_user_id)
+#  index_labels_on_account_user_id_and_app_and_name  (account_user_id,app,name)
 #
 # Foreign Keys
 #
@@ -24,4 +25,14 @@
 class Label < ApplicationRecord
   belongs_to :account_user
   alias_attribute :au, :account_user
+
+  def self.rules_of_insert
+    [
+      Strategy::Labels::CheckApp,
+      Strategy::Labels::SetName,
+      Strategy::Labels::CheckExits,
+      Strategy::Shares::SaveModel
+    ]
+  end
+
 end

@@ -2,19 +2,20 @@
 #
 # Table name: labels
 #
-#  id              :bigint           not null, primary key
-#  color           :string
-#  name            :string
-#  original_name   :string
-#  service         :string
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  account_user_id :bigint
+#  id               :bigint           not null, primary key
+#  app              :string
+#  background_color :string
+#  color            :string
+#  name             :string
+#  original_name    :string
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  account_user_id  :bigint
 #
 # Indexes
 #
-#  index_labels_on_account_user_id                       (account_user_id)
-#  index_labels_on_account_user_id_and_service_and_name  (account_user_id,service,name)
+#  index_labels_on_account_user_id                   (account_user_id)
+#  index_labels_on_account_user_id_and_app_and_name  (account_user_id,app,name)
 #
 # Foreign Keys
 #
@@ -24,5 +25,41 @@
 require 'rails_helper'
 
 RSpec.describe Label, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let!(:user) { create(:user) }
+  let!(:account) { create(:account) }
+  let!(:au) { create(:account_user, user: user, account: account) }
+
+  after do
+    events(:error)
+  end
+
+  describe 'business rules' do
+    context 'insert' do
+      it 'must save' do
+        label = build(:label, au: au, app: :manager_account)
+
+        t = Facade.new(au).insert label
+        expect(t.status).to eq(:green)
+        expect(Label.count).to eq(1)
+        expect(Event.count).to eq(0)
+      end
+
+      it "don't must save already exits name", :events do
+        name = 'Aeiou'
+        app = :manager_account
+        first_label = build(:label, au: au, app: app, name: name)
+        Facade.new(au).insert first_label
+
+        label = build(:label, au: au, app: app, name: name)
+        expect do
+          transporter = Facade.new(au).insert label
+          expect(transporter.status).to eq(:red)
+          expect(transporter.messages.count).to eq(1)
+        end.to change(Label, :count).by(0)
+
+        expect(Event.count).to eq(0)
+      end
+    end
+
+  end
 end

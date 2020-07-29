@@ -56,49 +56,40 @@ class ManagerAccount::Account < ApplicationRecord
     ]
   end
 
-  class Struct
+  FIELDS = [
+    {
+      field: :transaction_date,
+      description: 'Campo data transação',
+    },
+    {
+      field: :pay_date,
+      description: 'Campo data pagamento',
+    },
+    {
+      field: :ignore,
+      description: 'Ignorar campo'
+    },
+    {
+      field: :value,
+      description: 'Campo valor',
+    },
+    {
+      field: :reverse_value,
+      description: 'Campo valor invertido',
+    },
+    {
+      field: :description,
+      description: 'Campo descrição'
+    },
+    {
+      field: :symbol_of_value,
+      description: 'Simbolo de valor'
+    }
+  ].freeze
 
-    def self.description_options
-      options.map { |option| [option[:field], option[:description]] }
-    end
-
-    def self.find_field(field)
-      options.find { |f| f == field }
-    end
-
-    def self.options
-      [
-        {
-          field: :transaction_date,
-          description: 'Campo data transação',
-        },
-        {
-          field: :pay_date,
-          description: 'Campo data pagamento',
-        },
-        {
-          field: :ignore,
-          description: 'Ignorar campo'
-        },
-        {
-          field: :value,
-          description: 'Campo valor',
-        },
-        {
-          field: :reverse_value,
-          description: 'Campo valor invertido',
-        },
-        {
-          field: :description,
-          description: 'Campo descrição'
-        },
-        {
-          field: :symbol_of_value,
-          description: 'Simbolo de valor'
-        }
-      ]
-    end
-
+  def self.find_field(field)
+    FIELDS.find { |f| f == field }
   end
+
 
 end

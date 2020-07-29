@@ -1,14 +1,17 @@
 Rails.application.routes.draw do
+
+  resources :labels do
+    post :set_resources, on: :collection
+  end
+
   namespace :manager_account do
     resources :items
-    resources :accounts
+    resources :accounts do
+      get :field_options, on: :collection
+    end
     resources :transactions
     resources :upload_to_transactions
-    resources :structures do
-      get :options, on: :collection
-    end
   end
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
     registrations: 'auth/registrations',

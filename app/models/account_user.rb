@@ -27,4 +27,6 @@ class AccountUser < ApplicationRecord
   has_many :ma_accounts, class_name: 'ManagerAccount::Account'
   has_many :ma_transactions, class_name: 'ManagerAccount::Transaction'
 
+  has_many :labels
+
 end

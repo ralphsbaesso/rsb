@@ -45,6 +45,10 @@ class ManagerAccount::AccountsController < AuthenticatorController
     end
   end
 
+  def field_options
+    render json: { data: ManagerAccount::Account::FIELDS }
+  end
+
   private
 
   def account_parameter
