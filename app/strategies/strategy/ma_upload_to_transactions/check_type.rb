@@ -5,7 +5,7 @@ class Strategy::MAUploadToTransactions::CheckType < Strategy
     return unless account.type
 
     if account.type.to_sym == :credit_card && model.pay_date.nil?
-      add_message 'A conta tipo "Crédito" deve informar a data de pagamento.'
+      add_error 'A conta tipo "Crédito" deve informar a data de pagamento.'
       set_status :red
       return
     end
@@ -23,7 +23,7 @@ class Strategy::MAUploadToTransactions::CheckType < Strategy
       end
 
     unless date
-      add_message 'Data de pagamento inválida.'
+      add_error 'Data de pagamento inválida.'
       set_status :red
     end
   end

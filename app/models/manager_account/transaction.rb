@@ -33,6 +33,8 @@
 require_relative '../manager_account'
 
 class ManagerAccount::Transaction < ApplicationRecord
+  include RFacade::Mapper
+
   belongs_to :ma_item, optional: true, class_name: 'ManagerAccount::Item'
   belongs_to :ma_account, class_name: 'ManagerAccount::Account'
   belongs_to :account_user
@@ -43,35 +45,18 @@ class ManagerAccount::Transaction < ApplicationRecord
   alias_attribute :item, :ma_item
   monetize :price_cents
 
-  def self.rules_of_insert
-    [
-      Strategy::MATransactions::CheckTransactionDate,
-      Strategy::MATransactions::CheckPayDate,
-      Strategy::MATransactions::CheckAccount,
-      Strategy::Shares::SaveModel
-    ]
-  end
+  rules_of_insert Strategy::MATransactions::CheckTransactionDate,
+                  Strategy::MATransactions::CheckPayDate,
+                  Strategy::MATransactions::CheckAccount,
+                  Strategy::Shares::SaveModel
 
-  def self.rules_of_update
-    [
-      Strategy::MATransactions::CheckTransactionDate,
-      Strategy::MATransactions::CheckPayDate,
-      Strategy::MATransactions::CheckAccount,
-      Strategy::Shares::SaveModel
-    ]
-  end
+  rules_of_update Strategy::MATransactions::CheckTransactionDate,
+                  Strategy::MATransactions::CheckPayDate,
+                  Strategy::MATransactions::CheckAccount,
+                  Strategy::Shares::SaveModel
 
-  def self.rules_of_delete
-    [
-      Strategy::Shares::DestroyModel
-    ]
-  end
+  rules_of_delete Strategy::Shares::DestroyModel
 
-  def self.rules_of_select
-    [
-      Strategy::MATransactions::Filter
-
-    ]
-  end
+  rules_of_select Strategy::MATransactions::Filter
 
 end

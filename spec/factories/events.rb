@@ -11,17 +11,17 @@
 #  origin          :string
 #  rsb_module      :string
 #  service         :string
+#  user_email      :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  account_user_id :bigint
 #
 # Indexes
 #
-#  index_events_on_account_user_id  (account_user_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (account_user_id => account_users.id)
+#  index_events_on_account_user_id                 (account_user_id)
+#  index_events_on_account_user_id_and_important   (account_user_id,important)
+#  index_events_on_account_user_id_and_rsb_module  (account_user_id,rsb_module)
+#  index_events_on_account_user_id_and_user_email  (account_user_id,user_email)
 #
 
 FactoryBot.define do

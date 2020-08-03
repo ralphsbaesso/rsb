@@ -38,8 +38,9 @@ RSpec.describe Label, type: :model do
       it 'must save' do
         label = build(:label, au: au, app: :manager_account)
 
-        t = Facade.new(au).insert label
-        expect(t.status).to eq(:green)
+        facade = Facade.new(account_user: au)
+        facade.insert label
+        expect(facade.status).to eq(:green)
         expect(Label.count).to eq(1)
         expect(Event.count).to eq(0)
       end
@@ -48,13 +49,15 @@ RSpec.describe Label, type: :model do
         name = 'Aeiou'
         app = :manager_account
         first_label = build(:label, au: au, app: app, name: name)
-        Facade.new(au).insert first_label
+        facade = Facade.new(account_user: au)
+        facade.insert first_label
 
         label = build(:label, au: au, app: app, name: name)
         expect do
-          transporter = Facade.new(au).insert label
-          expect(transporter.status).to eq(:red)
-          expect(transporter.messages.count).to eq(1)
+          facade = Facade.new(account_user: au)
+          facade.insert label
+          expect(facade.status).to eq(:red)
+          expect(facade.errors.count).to eq(1)
         end.to change(Label, :count).by(0)
 
         expect(Event.count).to eq(0)

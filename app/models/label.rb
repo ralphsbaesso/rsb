@@ -23,16 +23,13 @@
 #
 
 class Label < ApplicationRecord
+  include RFacade::Mapper
   belongs_to :account_user
   alias_attribute :au, :account_user
 
-  def self.rules_of_insert
-    [
-      Strategy::Labels::CheckApp,
-      Strategy::Labels::SetName,
-      Strategy::Labels::CheckExits,
-      Strategy::Shares::SaveModel
-    ]
-  end
+  rules_of_insert Strategy::Labels::CheckApp,
+                  Strategy::Labels::SetName,
+                  Strategy::Labels::CheckExits,
+                  Strategy::Shares::SaveModel
 
 end

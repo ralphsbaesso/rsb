@@ -16,7 +16,7 @@ class Strategy::MATransactions::CheckTransactionDate < Strategy
       end
 
     unless transaction.transaction_date
-      add_message 'Data da transação inválida.'
+      add_error 'Data da transação inválida.'
       set_status :yellow
     end
 

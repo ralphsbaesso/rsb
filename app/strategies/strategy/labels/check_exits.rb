@@ -9,7 +9,7 @@ class Strategy::Labels::CheckExits < Strategy
                  .where('original_name LIKE ?', "%#{original_name}%")
                  .limit(1).to_a.first
     if match
-      add_message 'Marcador já existe'
+      add_error 'Marcador já existe'
       set_status :red
     end
   end

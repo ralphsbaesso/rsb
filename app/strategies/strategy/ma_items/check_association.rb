@@ -4,7 +4,7 @@ class Strategy::MAItems::CheckAssociation < Strategy
     item = model
 
     if item.ma_transactions.limit(1).to_a.present?
-      add_message 'Não pode apagar esse item, existe transações associado a ele.'
+      add_error 'Não pode apagar esse item, existe transações associado a ele.'
       set_status :red
     end
   end

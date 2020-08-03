@@ -4,7 +4,7 @@ class Strategy::MAAccounts::CheckAssociation < Strategy
     account = model
 
     if account.ma_transactions.count.positive?
-      add_message 'Existe TRASAÇÕES associada a essa conta!'
+      add_error 'Existe TRASAÇÕES associada a essa conta!'
       set_status :red
     end
 

@@ -5,7 +5,7 @@ class Strategy::MAUploadToTransactions::CheckSetting < Strategy
     fields = account.fields
 
     unless fields.present?
-      add_message 'A conta não está configurada para fazer upload de arquivos.'
+      add_error 'A conta não está configurada para fazer upload de arquivos.'
       set_status :red
     end
   end

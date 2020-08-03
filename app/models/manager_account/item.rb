@@ -19,38 +19,23 @@
 #
 
 class ManagerAccount::Item < ApplicationRecord
+  include RFacade::Mapper
+
   belongs_to :account_user
   has_many :ma_transactions, class_name: 'ManagerAccount::Transaction', foreign_key: :ma_item_id
 
   alias_attribute :au, :account_user
   validates_presence_of :name
 
-  def self.rules_of_insert
-    [
-      Strategy::Shares::CheckName,
-      Strategy::Shares::SaveModel
-    ]
-  end
+  rules_of_insert Strategy::Shares::CheckName,
+                  Strategy::Shares::SaveModel
 
-  def self.rules_of_update
-    [
-      Strategy::Shares::CheckName,
-      Strategy::Shares::SaveModel
-    ]
-  end
+  rules_of_update Strategy::Shares::CheckName,
+                  Strategy::Shares::SaveModel
 
-  def self.rules_of_delete
-    [
-      Strategy::MAItems::CheckAssociation,
-      Strategy::Shares::DestroyModel
-    ]
-  end
+  rules_of_delete Strategy::MAItems::CheckAssociation,
+                  Strategy::Shares::DestroyModel
 
-  def self.rules_of_select
-    [
-      Strategy::MAItems::Filter
-
-    ]
-  end
+  rules_of_select Strategy::MAItems::Filter
 
 end

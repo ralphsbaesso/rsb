@@ -1,7 +1,7 @@
 class Strategy::MAItems::Filter < Strategy
 
   def process
-    self.items = current_account_user.ma_items
+    self.data = current_account_user.ma_items
   end
 
   def self.my_description

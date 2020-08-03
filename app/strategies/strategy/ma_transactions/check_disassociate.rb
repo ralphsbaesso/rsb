@@ -6,7 +6,7 @@ class Strategy::MATransactions::CheckDisassociate < Strategy
 
     # checar se a transação a ser modificada é destino e está tentando apagar a transação origem
     if current_transaction.origin? == false
-      add_message 'Não é possível alteração uma transação a partir da transação destino!'
+      add_error 'Não é possível alteração uma transação a partir da transação destino!'
       set_status :red
       return false
     end

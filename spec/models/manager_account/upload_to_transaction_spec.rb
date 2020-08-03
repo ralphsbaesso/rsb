@@ -21,6 +21,7 @@ RSpec.describe MA::UploadToTransaction, type: :model do
         path = File.join(Rails.root, 'spec', 'files', 'manager_account', 'extrato_mar2019.txt')
         upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path)
 
+        facade = Facade.new(account_user: au)
         facade.insert(upload)
         expect(MA::Transaction.count).to eq(35)
       end
@@ -29,9 +30,10 @@ RSpec.describe MA::UploadToTransaction, type: :model do
         path = File.join(Rails.root, 'spec', 'files', 'manager_account', 'extrato_mar2019.txt')
         upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path)
 
-        transporter = facade.insert(upload)
-        expect(transporter.status_green?).to be_falsey
-        expect(transporter.messages.first).to eq('A conta não está configurada para fazer upload de arquivos.')
+        facade = Facade.new(account_user: au)
+        facade.insert(upload)
+        expect(facade.status_green?).to be_falsey
+        expect(facade.errors.first).to eq('A conta não está configurada para fazer upload de arquivos.')
         expect(MA::Transaction.count).to eq(0)
       end
 
@@ -57,6 +59,7 @@ RSpec.describe MA::UploadToTransaction, type: :model do
         upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path)
 
         expect do
+          facade = Facade.new(account_user: au)
           facade.insert(upload)
         end.to change(ma_account.ma_transactions, :count).by(33)
       end
@@ -73,6 +76,7 @@ RSpec.describe MA::UploadToTransaction, type: :model do
         path = File.join(Rails.root, 'spec', 'files', 'manager_account', 'cartao_de_credito_santander.csv')
         upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path, pay_date: date)
 
+        facade = Facade.new(account_user: au)
         facade.insert(upload)
         expect(ma_account.ma_transactions.count).to eq(18)
 
@@ -106,6 +110,7 @@ RSpec.describe MA::UploadToTransaction, type: :model do
         upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path, pay_date: date)
 
         expect do
+          facade = Facade.new(account_user: au)
           facade.insert(upload)
         end.to change(ma_account.ma_transactions, :count).by(16)
 
@@ -123,6 +128,7 @@ RSpec.describe MA::UploadToTransaction, type: :model do
         )
         upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path)
 
+        facade = Facade.new(account_user: au)
         facade.insert(upload)
         expect(ma_account.ma_transactions.count).to eq(32)
       end
@@ -150,6 +156,7 @@ RSpec.describe MA::UploadToTransaction, type: :model do
 
         upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path)
         expect do
+          facade = Facade.new(account_user: au)
           facade.insert(upload)
         end.to change(ma_account.ma_transactions, :count).by(30)
       end
@@ -160,6 +167,7 @@ RSpec.describe MA::UploadToTransaction, type: :model do
         path = File.join(Rails.root, 'spec', 'files', 'date_description_value2.csv')
         bs.last_extract.attach(io: File.open(path), filename: 'test')
 
+        facade = Facade.new(account_user: au)
         facade.insert(bs)
 
         expect(bs.transactions.count).to eq(3)
@@ -170,31 +178,28 @@ RSpec.describe MA::UploadToTransaction, type: :model do
     end
 
     context 'ignore_date_doc_description_value_symbol' do
-        it 'save 4 transaction' do
-          ma_account.fields = %w[ignore transaction_date ignore description value symbol]
-          ma_account.save
+      it 'save 4 transaction' do
+        ma_account.fields = %w[ignore transaction_date ignore description value symbol]
+        ma_account.save
 
-          path = File.join(
-            Rails.root, 'spec', 'files', 'manager_account',
-            'ignore_date_doc_description_value_symbol.txt'
-          )
+        path = File.join(
+          Rails.root, 'spec', 'files', 'manager_account',
+          'ignore_date_doc_description_value_symbol.txt'
+        )
 
-          upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path)
-          facade.insert(upload)
-          expect(ma_account.ma_transactions.count).to eq(4)
+        upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path)
+        facade = Facade.new(account_user: au)
+        facade.insert(upload)
+        expect(ma_account.ma_transactions.count).to eq(4)
 
-          transactions = MA::Transaction.all.to_a
-          expect(transactions[0].price_cents).to eq(- 676_37)
-          expect(transactions[1].price_cents).to eq(- 25_00)
-          expect(transactions[2].price_cents).to eq(700_00)
-          expect(transactions[3].price_cents).to eq(- 677_92)
-        end
-
+        transactions = MA::Transaction.all.to_a
+        expect(transactions[0].price_cents).to eq(- 676_37)
+        expect(transactions[1].price_cents).to eq(- 25_00)
+        expect(transactions[2].price_cents).to eq(700_00)
+        expect(transactions[3].price_cents).to eq(- 677_92)
       end
+    end
 
   end
 
-  def facade
-    Facade.new au
-  end
 end

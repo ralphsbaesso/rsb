@@ -5,7 +5,7 @@ class Strategy::MATransactions::Filter < Strategy
     query = current_account_user.ma_transactions
     query = query.joins(:labels).where(labels: { id: filter[:label_id] }) if filter[:label_id]
 
-    self.items = query
+    self.data = query
   end
 
   def self.my_description

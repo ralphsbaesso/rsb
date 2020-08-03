@@ -1,5 +1,7 @@
 
 class ManagerAccount::UploadToTransaction
+  include RFacade::Mapper
+
   attr_reader :ma_account, :file
   attr_accessor :pay_date
 
@@ -16,14 +18,10 @@ class ManagerAccount::UploadToTransaction
     @ma_account = ma_account
   end
 
-  def self.rules_of_insert
-    [
-      Strategy::MAUploadToTransactions::CheckSetting,
-      Strategy::MAUploadToTransactions::CheckType,
-      Strategy::MAUploadToTransactions::Parse,
-      Strategy::MAUploadToTransactions::CheckExits,
-      Strategy::MAUploadToTransactions::BuildTransactions
-    ]
-  end
+  rules_of_insert Strategy::MAUploadToTransactions::CheckSetting,
+                  Strategy::MAUploadToTransactions::CheckType,
+                  Strategy::MAUploadToTransactions::Parse,
+                  Strategy::MAUploadToTransactions::CheckExits,
+                  Strategy::MAUploadToTransactions::BuildTransactions
 
 end

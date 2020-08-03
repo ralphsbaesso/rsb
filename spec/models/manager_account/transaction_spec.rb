@@ -52,8 +52,9 @@ RSpec.describe MA::Transaction, type: :model do
       )
 
       expect do
-        transporter = facade.insert(transaction)
-        expect(transporter.status_green?).to be_truthy
+        facade = Facade.new(account_user: au)
+        facade.insert(transaction)
+        expect(facade.status_green?).to be_truthy
         expect(transaction.transaction_date).to eq(transaction.pay_date)
       end.to change(MA::Transaction, :count).by(1)
     end
@@ -65,12 +66,13 @@ RSpec.describe MA::Transaction, type: :model do
         au: au,
         ma_account: ma_account,
         transaction_date: Date.today,
-        item: item,
+        item: item
       )
 
       expect do
-        transporter = facade.insert(transaction)
-        expect(transporter.status_green?).to be_truthy
+        facade = Facade.new(account_user: au)
+        facade.insert(transaction)
+        expect(facade.status_green?).to be_truthy
         expect(transaction.transaction_date).to eq(transaction.pay_date)
         expect(transaction.ma_item_id).to eq(item.id)
       end.to change(MA::Transaction, :count).by(1)
@@ -80,11 +82,13 @@ RSpec.describe MA::Transaction, type: :model do
       transaction = MA::Transaction.new
 
       expect do
-        t = facade.insert(transaction)
-        expect(t.status_green?).to be_falsey
-        expect(t.messages.count).to eq(2)
-        expect(t.messages.first).to eq('Data da transação inválida.')
-        expect(t.messages.last).to eq('Deve associar a transação ao uma Conta.')
+        facade = Facade.new(account_user: au)
+        facade.insert(transaction)
+
+        expect(facade.status_green?).to be_falsey
+        expect(facade.errors.count).to eq(2)
+        expect(facade.errors.first).to eq('Data da transação inválida.')
+        expect(facade.errors.last).to eq('Deve associar a transação ao uma Conta.')
       end.to change(MA::Transaction, :count).by(0)
     end
 
@@ -100,8 +104,9 @@ RSpec.describe MA::Transaction, type: :model do
       transaction.price = new_price
       transaction.description = new_description
 
-      t = facade.update transaction
-      expect(t.status_green?).to be_truthy
+      facade = Facade.new(account_user: au)
+      facade.update transaction
+      expect(facade.status_green?).to be_truthy
 
       expect(transaction.price).to eq(new_price)
       expect(transaction.description).to eq(new_description)
@@ -114,6 +119,7 @@ RSpec.describe MA::Transaction, type: :model do
       transaction = create(:ma_transaction, au: au, ma_account: ma_account)
 
       expect do
+        facade = Facade.new(account_user: au)
         facade.delete(transaction)
         end.to change(MA::Transaction, :count).by(-1)
     end
@@ -128,9 +134,9 @@ RSpec.describe MA::Transaction, type: :model do
         create(:ma_transaction, au: au, ma_account: ma_account)
       end
 
-      transporter = facade.select MA::Transaction
-      items = transporter.items
-      expect(items.count).to eq(size)
+      facade = Facade.new(account_user: au)
+      facade.select MA::Transaction
+      expect(facade.data.count).to eq(size)
     end
 
     it 'with label' do
@@ -143,14 +149,10 @@ RSpec.describe MA::Transaction, type: :model do
       transaction.labels << label
       transaction.save
 
-      transporter = facade.select MA::Transaction, filter: { label_id: label.id }
-      items = transporter.items
-      expect(items.count).to eq(1)
+      facade = Facade.new(account_user: au)
+      facade.select MA::Transaction, filter: { label_id: label.id }
+      expect(facade.data.count).to eq(1)
     end
 
-  end
-
-  def facade
-    Facade.new au
   end
 end

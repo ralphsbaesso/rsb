@@ -1,5 +1,6 @@
 class Strategy::Shares::CheckName < Strategy
 
+  desc 'Verifica se já está utilizando este nome'
   def process
     klazz = model.class.name.constantize
 
@@ -10,15 +11,10 @@ class Strategy::Shares::CheckName < Strategy
     ).first
 
     if model_from_db
-      add_message 'Nome já em uso.'
+      add_error 'Nome já em uso.'
       set_status :red
     end
 
   end
 
-  def self.my_description
-    <<~S
-      Verifica se já está utilizando este nome
-    S
-  end
 end

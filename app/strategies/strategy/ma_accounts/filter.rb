@@ -1,12 +1,8 @@
 class Strategy::MAAccounts::Filter < Strategy
 
+  desc 'Filtro para "ManagerAccount"'
   def process
-    self.items = current_account_user.ma_accounts
+    self.data = current_account_user.ma_accounts
   end
 
-  def self.my_description
-    <<~S
-      Filtro
-    S
-  end
 end

@@ -16,12 +16,13 @@ class Strategy::MAUploadToTransactions::BuildTransactions < Strategy
         pay_date: hash[:pay_date]
       )
 
-      transporter = Facade.new(account_user).insert transaction
-      messages += transporter.messages unless transporter.status_green?
+      facade = Facade.new(account_user: account_user)
+      facade.insert transaction
+      messages += facade.errors unless facade.status_green?
     end
 
     if messages.present?
-      add_message messages
+      add_error messages
       set_status :yellow
     end
   end

@@ -39,10 +39,14 @@ ActiveRecord::Schema.define(version: 2020_07_08_224825) do
     t.string "event_type"
     t.string "origin"
     t.string "action"
+    t.string "user_email"
     t.boolean "important", default: false
     t.jsonb "details", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["account_user_id", "important"], name: "index_events_on_account_user_id_and_important"
+    t.index ["account_user_id", "rsb_module"], name: "index_events_on_account_user_id_and_rsb_module"
+    t.index ["account_user_id", "user_email"], name: "index_events_on_account_user_id_and_user_email"
     t.index ["account_user_id"], name: "index_events_on_account_user_id"
   end
 
@@ -138,7 +142,6 @@ ActiveRecord::Schema.define(version: 2020_07_08_224825) do
 
   add_foreign_key "account_users", "accounts"
   add_foreign_key "account_users", "users"
-  add_foreign_key "events", "account_users"
   add_foreign_key "labels", "account_users"
   add_foreign_key "labels_ma_transactions", "labels"
   add_foreign_key "labels_ma_transactions", "ma_transactions"
