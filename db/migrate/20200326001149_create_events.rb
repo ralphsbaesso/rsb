@@ -2,7 +2,7 @@ class CreateEvents < ActiveRecord::Migration[5.2]
   def change
     create_table :events do |t|
       t.references :account_user
-      t.string :rsb_module
+      t.string :app
       t.string :service
       t.string :message
       t.string :event_type

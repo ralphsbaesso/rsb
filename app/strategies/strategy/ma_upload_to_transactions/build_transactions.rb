@@ -1,14 +1,14 @@
 class Strategy::MAUploadToTransactions::BuildTransactions < Strategy
 
   def process
-    ma_account = model.ma_account
-    account_user = ma_account.account_user
+    bam_account = model.bam_account
+    account_user = bam_account.account_user
     list = bucket[:list]
 
     messages = []
     list.each do |hash|
-      transaction = MA::Transaction.new(
-        ma_account: ma_account,
+      transaction = BAM::Transaction.new(
+        bam_account: bam_account,
         account_user: account_user,
         transaction_date: hash[:transaction_date],
         price_cents: hash[:price_cents],

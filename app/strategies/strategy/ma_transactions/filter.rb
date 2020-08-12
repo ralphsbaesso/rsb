@@ -2,7 +2,7 @@ class Strategy::MATransactions::Filter < Strategy
 
   def process
     filter = bucket[:filter] || {}
-    query = current_account_user.ma_transactions
+    query = current_account_user.bam_transactions
     query = query.joins(:labels).where(labels: { id: filter[:label_id] }) if filter[:label_id]
 
     self.data = query
@@ -10,7 +10,7 @@ class Strategy::MATransactions::Filter < Strategy
 
   def self.my_description
     <<~S
-      Filtro para MA::Transacion
+      Filtro para BAM::Transacion
     S
   end
 end

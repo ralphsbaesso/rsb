@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: ma_items
+# Table name: bam_items
 #
 #  id              :bigint           not null, primary key
 #  description     :string
@@ -11,18 +11,18 @@
 #
 # Indexes
 #
-#  index_ma_items_on_account_user_id  (account_user_id)
+#  index_bam_items_on_account_user_id  (account_user_id)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (account_user_id => account_users.id)
 #
 
-class ManagerAccount::Item < ApplicationRecord
+class BAM::Item < ApplicationRecord
   include RuleBox::Mapper
 
   belongs_to :account_user
-  has_many :ma_transactions, class_name: 'ManagerAccount::Transaction', foreign_key: :ma_item_id
+  has_many :bam_transactions, class_name: 'BAM::Transaction', foreign_key: :bam_item_id
 
   alias_attribute :au, :account_user
   validates_presence_of :name

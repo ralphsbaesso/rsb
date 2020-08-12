@@ -26,7 +26,7 @@ pt-BR:
         unlock_token: Token de desbloqueio
         updated_at: Atualizado em
 
-      manager_account/item:
+      bam/item:
         name: Nome
 
     errors:
@@ -38,14 +38,14 @@ pt-BR:
             password:
               too_short: curta
 
-        manager_account/item:
+        bam/item:
           attributes:
             name:
               blank: não pode ficar em branco
 
-        manager_account/transaction:
+        bam/transaction:
           attributes:
-            ma_account:
+            bam_account:
               required: é obrigatório
 
 

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "ManagerAccount::Items", type: :request do
+RSpec.describe "BAM::Items", type: :request do
 
 
 end

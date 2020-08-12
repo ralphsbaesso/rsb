@@ -4,7 +4,7 @@ Rails.application.routes.draw do
     post :set_resources, on: :collection
   end
 
-  namespace :manager_account do
+  namespace :bam do
     resources :items
     resources :accounts do
       get :field_options, on: :collection

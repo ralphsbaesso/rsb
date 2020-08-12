@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: ma_accounts
+# Table name: bam_accounts
 #
 #  id              :bigint           not null, primary key
 #  account_type    :string
@@ -13,7 +13,7 @@
 #
 # Indexes
 #
-#  index_ma_accounts_on_account_user_id  (account_user_id)
+#  index_bam_accounts_on_account_user_id  (account_user_id)
 #
 # Foreign Keys
 #
@@ -22,7 +22,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ManagerAccount::Account, type: :model do
+RSpec.describe BAM::Account, type: :model do
   let!(:user) { create(:user) }
   let!(:account) { create(:account) }
   let!(:au) { create(:account_user, user: user, account: account) }
@@ -41,17 +41,17 @@ RSpec.describe ManagerAccount::Account, type: :model do
     context 'insert' do
       it 'increase one account' do
 
-        account = build(:ma_account, au: au)
+        account = build(:bam_account, au: au)
         facade = Facade.new(account_user: au)
         facade.insert(account)
         expect(facade.status).to eq(:green)
-        expect(MA::Account.count).to eq(1)
+        expect(BAM::Account.count).to eq(1)
       end
     end
 
     context 'update' do
       it 'modify attributes' do
-        account = create(:ma_account, au: au, name: Faker::Name.name)
+        account = create(:bam_account, au: au, name: Faker::Name.name)
         new_name = Faker::FunnyName.name
         new_description = Faker::Book.publisher
 
@@ -68,8 +68,8 @@ RSpec.describe ManagerAccount::Account, type: :model do
 
       it 'return message error update with same name' do
         name = Faker::Name.name
-        create(:ma_account, au: au, name: name)
-        account = create(:ma_account, au: au, name: Faker::FunnyName.name)
+        create(:bam_account, au: au, name: name)
+        account = create(:bam_account, au: au, name: Faker::FunnyName.name)
 
         account.name = name
         facade = Facade.new(account_user: au)
@@ -82,15 +82,15 @@ RSpec.describe ManagerAccount::Account, type: :model do
     context 'delete' do
       it 'decrease one account' do
 
-        account = create(:ma_account, au: au)
+        account = create(:bam_account, au: au)
         expect do
           Facade.new(account_user: au).delete(account)
-        end.to change(MA::Account, :count).by(-1)
+        end.to change(BAM::Account, :count).by(-1)
       end
 
       it 'return error account with association' do
-        account = create(:ma_account, au: au)
-        create(:ma_transaction, au: au, ma_account: account)
+        account = create(:bam_account, au: au)
+        create(:bam_transaction, au: au, bam_account: account)
 
         facade = Facade.new(account_user: au)
         expect {
@@ -105,10 +105,10 @@ RSpec.describe ManagerAccount::Account, type: :model do
 
       it 'return list of items' do
         amount = 10
-        create_list(:ma_account, amount, au: au)
+        create_list(:bam_account, amount, au: au)
 
         facade = Facade.new(account_user: au)
-        facade.select MA::Account.to_s
+        facade.select BAM::Account.to_s
         expect(facade.data.count).to eq(amount)
       end
     end

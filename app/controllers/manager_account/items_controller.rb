@@ -1,8 +1,8 @@
-class ManagerAccount::ItemsController < AuthenticatorController
+class BAM::ItemsController < AuthenticatorController
   before_action :set_item, only: [:show, :update, :destroy]
 
   def index
-    facade.select ManagerAccount::Item
+    facade.select BAM::Item
 
     if facade.status_green?
       render json: facade.to_data(:data, json_options: { include: :labels})
@@ -12,7 +12,7 @@ class ManagerAccount::ItemsController < AuthenticatorController
   end
 
   def create
-    item = ManagerAccount::Item.new(item_parameter)
+    item = BAM::Item.new(item_parameter)
     item.au = current_ac
     transporter = facade.insert item
 
@@ -52,6 +52,6 @@ class ManagerAccount::ItemsController < AuthenticatorController
   end
 
   def set_item
-    @item = ManagerAccount::Item.find params[:id]
+    @item = BAM::Item.find params[:id]
   end
 end

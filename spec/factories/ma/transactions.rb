@@ -1,6 +1,6 @@
 FactoryBot.define do
 
-  factory :ma_transaction, class: ManagerAccount::Transaction do
+  factory :bam_transaction, class: BAM::Transaction do
     amount { 0 }
     description { 'MyString' }
     origin { 'MyString' }
@@ -9,7 +9,7 @@ FactoryBot.define do
     status { 'MyString' }
     transaction_date { Faker::Date.backward }
     account_user { nil }
-    ma_account { nil }
-    ma_item { nil }
+    bam_account { nil }
+    bam_item { nil }
   end
 end

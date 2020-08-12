@@ -1,18 +1,18 @@
-class ManagerAccount::TransactionsController < AuthenticatorController
+class BAM::TransactionsController < AuthenticatorController
   before_action :set_transaction, only: [:show, :update, :destroy]
 
   def index
-    transporter = facade.select ManagerAccount::Transaction
+    transporter = facade.select BAM::Transaction
 
     if transporter.status_green?
-      render json: transporter.to_data(:items, json_optons: { include: [:ma_item, :ma_account, :ma_subitem]})
+      render json: transporter.to_data(:items, json_optons: { include: [:bam_item, :bam_account, :bam_subitem]})
     else
       render json: { errors: transporter.messages }, status: :unprocessable_entity
     end
   end
 
   def create
-    transaction = ManagerAccount::Transaction.new(transaction_parameter)
+    transaction = BAM::Transaction.new(transaction_parameter)
     transaction.au = current_ac
     transporter = facade.insert transaction
 
@@ -58,12 +58,12 @@ class ManagerAccount::TransactionsController < AuthenticatorController
                                            transaction_date
                                            created_at
                                            updated_at
-                                           ma_account_id
-                                           ma_item_id
-                                           ma_subitem_id])
+                                           bam_account_id
+                                           bam_item_id
+                                           bam_subitem_id])
   end
 
   def set_transaction
-    @transaction = ManagerAccount::Transaction.find params[:id]
+    @transaction = BAM::Transaction.find params[:id]
   end
 end

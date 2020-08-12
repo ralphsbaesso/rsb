@@ -1,6 +1,6 @@
-class CreateManagerAccountTransactions < ActiveRecord::Migration[5.2]
+class CreateBAMTransactions < ActiveRecord::Migration[5.2]
   def change
-    create_table :ma_transactions do |t|
+    create_table :bam_transactions do |t|
       t.string :description
       t.integer :price_cents, default: 0
       t.float :amount, default: 0.0
@@ -8,9 +8,9 @@ class CreateManagerAccountTransactions < ActiveRecord::Migration[5.2]
       t.string :status
       t.date :transaction_date
       t.date :pay_date
-      t.references :ma_item
-      t.references :ma_subitem
-      t.references :ma_account, foreign_key: true
+      t.references :bam_item
+      t.references :bam_subitem
+      t.references :bam_account, foreign_key: true
       t.references :account_user, foreign_key: true
 
       t.timestamps

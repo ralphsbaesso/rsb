@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe MA::UploadToTransaction, type: :model do
+RSpec.describe BAM::UploadToTransaction, type: :model do
   let!(:user) { create(:user) }
   let!(:account) { create(:account) }
   let!(:au) { create(:account_user, user: user, account: account) }
-  let(:ma_account) { create(:ma_account, au: au) }
-  let(:item) { create(:ma_item, au: au) }
+  let(:bam_account) { create(:bam_account, au: au) }
+  let(:item) { create(:bam_item, au: au) }
 
   after do
     events(:error)
@@ -15,72 +15,72 @@ RSpec.describe MA::UploadToTransaction, type: :model do
 
     context 'account itau_cc' do
       it 'save 35 transaction' do
-        ma_account.fields = %w[transaction_date description value]
-        ma_account.save
+        bam_account.fields = %w[transaction_date description value]
+        bam_account.save
 
-        path = File.join(Rails.root, 'spec', 'files', 'manager_account', 'extrato_mar2019.txt')
-        upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path)
+        path = File.join(Rails.root, 'spec', 'files', 'bam', 'extrato_mar2019.txt')
+        upload = BAM::UploadToTransaction.new(bam_account: bam_account, file: path)
 
         facade = Facade.new(account_user: au)
         facade.insert(upload)
-        expect(MA::Transaction.count).to eq(35)
+        expect(BAM::Transaction.count).to eq(35)
       end
 
       it 'must return error' do
-        path = File.join(Rails.root, 'spec', 'files', 'manager_account', 'extrato_mar2019.txt')
-        upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path)
+        path = File.join(Rails.root, 'spec', 'files', 'bam', 'extrato_mar2019.txt')
+        upload = BAM::UploadToTransaction.new(bam_account: bam_account, file: path)
 
         facade = Facade.new(account_user: au)
         facade.insert(upload)
         expect(facade.status_green?).to be_falsey
         expect(facade.errors.first).to eq('A conta não está configurada para fazer upload de arquivos.')
-        expect(MA::Transaction.count).to eq(0)
+        expect(BAM::Transaction.count).to eq(0)
       end
 
       it 'save 33 transaction' do
-        ma_account.fields = %w[transaction_date description value]
-        ma_account.save
+        bam_account.fields = %w[transaction_date description value]
+        bam_account.save
 
-        create(:ma_transaction,
+        create(:bam_transaction,
                transaction_date: Date.parse('2019-03-29'),
                description: '[RSHOP-SHIBATA H 0-29/03]',
                price_cents: -14_202,
-               ma_account: ma_account,
+               bam_account: bam_account,
                account_user: au)
 
-        create(:ma_transaction,
+        create(:bam_transaction,
                transaction_date: Date.parse('2019-03-29'),
                description: '[RSHOP-ASSAI ATACA-29/03]',
                price_cents: -139_21,
-               ma_account: ma_account,
+               bam_account: bam_account,
                account_user: au)
 
-        path = File.join(Rails.root, 'spec', 'files', 'manager_account', 'extrato_mar2019.txt')
-        upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path)
+        path = File.join(Rails.root, 'spec', 'files', 'bam', 'extrato_mar2019.txt')
+        upload = BAM::UploadToTransaction.new(bam_account: bam_account, file: path)
 
         expect do
           facade = Facade.new(account_user: au)
           facade.insert(upload)
-        end.to change(ma_account.ma_transactions, :count).by(33)
+        end.to change(bam_account.bam_transactions, :count).by(33)
       end
     end
 
     context 'account "cartão de crédito santander"' do
 
       it 'save 18 transaction' do
-        ma_account.fields = %w[transaction_date description ignore reverse_value]
-        ma_account.type = :credit_card
-        ma_account.save
+        bam_account.fields = %w[transaction_date description ignore reverse_value]
+        bam_account.type = :credit_card
+        bam_account.save
 
         date = Date.new
-        path = File.join(Rails.root, 'spec', 'files', 'manager_account', 'cartao_de_credito_santander.csv')
-        upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path, pay_date: date)
+        path = File.join(Rails.root, 'spec', 'files', 'bam', 'cartao_de_credito_santander.csv')
+        upload = BAM::UploadToTransaction.new(bam_account: bam_account, file: path, pay_date: date)
 
         facade = Facade.new(account_user: au)
         facade.insert(upload)
-        expect(ma_account.ma_transactions.count).to eq(18)
+        expect(bam_account.bam_transactions.count).to eq(18)
 
-        transaction = ma_account.ma_transactions.last
+        transaction = bam_account.bam_transactions.last
         expect(transaction.price_cents).to eq(-4768)
         expect(transaction.price.format).to eq('R$ -47,68')
         expect(transaction.transaction_date).to eq(Date.new(2019, 3, 28))
@@ -88,31 +88,31 @@ RSpec.describe MA::UploadToTransaction, type: :model do
       end
 
       it 'save 16 transaction' do
-        ma_account.fields = %w[transaction_date description ignore reverse_value]
-        ma_account.type = :credit_card
-        ma_account.save
+        bam_account.fields = %w[transaction_date description ignore reverse_value]
+        bam_account.type = :credit_card
+        bam_account.save
 
-        create(:ma_transaction,
+        create(:bam_transaction,
                transaction_date: Date.new(2018, 11, 23),
                description: '[LOJAS AMERICANAS MOG(05/08)]',
                price_cents: -1817,
-               ma_account: ma_account,
+               bam_account: bam_account,
                account_user: au)
-        create(:ma_transaction,
+        create(:bam_transaction,
                transaction_date: Date.new(2019, 3, 20),
                description: '[PERNAMBUCANAS]',
                price_cents: -4996,
-               ma_account: ma_account,
+               bam_account: bam_account,
                account_user: au)
 
         date = Date.new
-        path = File.join(Rails.root, 'spec', 'files', 'manager_account', 'cartao_de_credito_santander.csv')
-        upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path, pay_date: date)
+        path = File.join(Rails.root, 'spec', 'files', 'bam', 'cartao_de_credito_santander.csv')
+        upload = BAM::UploadToTransaction.new(bam_account: bam_account, file: path, pay_date: date)
 
         expect do
           facade = Facade.new(account_user: au)
           facade.insert(upload)
-        end.to change(ma_account.ma_transactions, :count).by(16)
+        end.to change(bam_account.bam_transactions, :count).by(16)
 
       end
     end
@@ -120,45 +120,45 @@ RSpec.describe MA::UploadToTransaction, type: :model do
     context 'date_description_value' do
 
       it 'save 35 transaction' do
-        ma_account.fields = %w[transaction_date description value]
-        ma_account.save
+        bam_account.fields = %w[transaction_date description value]
+        bam_account.save
 
         path = File.join(
-          Rails.root, 'spec', 'files', 'manager_account', 'date_description_value.csv'
+          Rails.root, 'spec', 'files', 'bam', 'date_description_value.csv'
         )
-        upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path)
+        upload = BAM::UploadToTransaction.new(bam_account: bam_account, file: path)
 
         facade = Facade.new(account_user: au)
         facade.insert(upload)
-        expect(ma_account.ma_transactions.count).to eq(32)
+        expect(bam_account.bam_transactions.count).to eq(32)
       end
 
       it 'save 33 transaction' do
-        ma_account.fields = %w[transaction_date description value]
-        ma_account.save
+        bam_account.fields = %w[transaction_date description value]
+        bam_account.save
 
-        create(:ma_transaction,
+        create(:bam_transaction,
                transaction_date: Date.parse('2019-04-22'),
                description: '[COMPRA CARTAO - COMPRA no estabelecimento DEIA MELO REST E PIZZA M]',
                price_cents: -24_00,
-               ma_account: ma_account,
+               bam_account: bam_account,
                account_user: au)
-        create(:ma_transaction,
+        create(:bam_transaction,
                transaction_date: Date.parse('2019-05-03'),
                description: '[COMPRA CARTAO - COMPRA no estabelecimento SHIBATA H 02           M]',
                price_cents: -126_72,
-               ma_account: ma_account,
+               bam_account: bam_account,
                account_user: au)
 
         path = File.join(
-          Rails.root, 'spec', 'files', 'manager_account', 'date_description_value.csv'
+          Rails.root, 'spec', 'files', 'bam', 'date_description_value.csv'
         )
 
-        upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path)
+        upload = BAM::UploadToTransaction.new(bam_account: bam_account, file: path)
         expect do
           facade = Facade.new(account_user: au)
           facade.insert(upload)
-        end.to change(ma_account.ma_transactions, :count).by(30)
+        end.to change(bam_account.bam_transactions, :count).by(30)
       end
 
       xit 'must save one and ignore two transactions' do
@@ -179,20 +179,20 @@ RSpec.describe MA::UploadToTransaction, type: :model do
 
     context 'ignore_date_doc_description_value_symbol' do
       it 'save 4 transaction' do
-        ma_account.fields = %w[ignore transaction_date ignore description value symbol]
-        ma_account.save
+        bam_account.fields = %w[ignore transaction_date ignore description value symbol]
+        bam_account.save
 
         path = File.join(
-          Rails.root, 'spec', 'files', 'manager_account',
+          Rails.root, 'spec', 'files', 'bam',
           'ignore_date_doc_description_value_symbol.txt'
         )
 
-        upload = MA::UploadToTransaction.new(ma_account: ma_account, file: path)
+        upload = BAM::UploadToTransaction.new(bam_account: bam_account, file: path)
         facade = Facade.new(account_user: au)
         facade.insert(upload)
-        expect(ma_account.ma_transactions.count).to eq(4)
+        expect(bam_account.bam_transactions.count).to eq(4)
 
-        transactions = MA::Transaction.all.to_a
+        transactions = BAM::Transaction.all.to_a
         expect(transactions[0].price_cents).to eq(- 676_37)
         expect(transactions[1].price_cents).to eq(- 25_00)
         expect(transactions[2].price_cents).to eq(700_00)

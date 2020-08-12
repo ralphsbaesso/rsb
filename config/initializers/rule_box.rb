@@ -9,7 +9,7 @@ RuleBox::Facade.configure do |config|
   config.resolver_exception do |exception, facade|
     account_user = facade.current_account_user
     Event.add message: exception.message,
-              rsb_module: :application,
+              app: :application,
               account_user: account_user,
               type: :error,
               class_error: exception.class,

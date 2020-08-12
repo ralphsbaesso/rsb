@@ -1,7 +1,7 @@
 class Strategy::MAUploadToTransactions::CheckType < Strategy
 
   def process
-    account = model.ma_account
+    account = model.bam_account
     return unless account.type
 
     if account.type.to_sym == :credit_card && model.pay_date.nil?

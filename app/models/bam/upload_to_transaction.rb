@@ -1,12 +1,12 @@
 
-class ManagerAccount::UploadToTransaction
+class BAM::UploadToTransaction
   include RuleBox::Mapper
 
-  attr_reader :ma_account, :file
+  attr_reader :bam_account, :file
   attr_accessor :pay_date
 
-  def initialize(ma_account:, file:, pay_date: nil)
-    raise 'Must pass "ManagerAccount"' unless ma_account.is_a?(ManagerAccount::Account)
+  def initialize(bam_account:, file:, pay_date: nil)
+    raise 'Must pass "BAM"' unless bam_account.is_a?(BAM::Account)
 
     if file.is_a?(File) || File.file?(file)
       @file = File.open(file, 'r')
@@ -15,7 +15,7 @@ class ManagerAccount::UploadToTransaction
     end
 
     @pay_date = pay_date
-    @ma_account = ma_account
+    @bam_account = bam_account
   end
 
   rules_of_insert Strategy::MAUploadToTransactions::CheckSetting,

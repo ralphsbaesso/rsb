@@ -1,8 +1,8 @@
-class ManagerAccount::AccountsController < AuthenticatorController
+class BAM::AccountsController < AuthenticatorController
   before_action :set_account, only: [:show, :update, :destroy]
 
   def index
-    facade.select 'ManagerAccount::Account'
+    facade.select 'BAM::Account'
 
     if facade.status_green?
       render json: facade.to_data(:data)
@@ -12,7 +12,7 @@ class ManagerAccount::AccountsController < AuthenticatorController
   end
 
   def create
-    account = ManagerAccount::Account.new(account_parameter)
+    account = BAM::Account.new(account_parameter)
     account.au = current_ac
     facade.insert account
 
@@ -46,7 +46,7 @@ class ManagerAccount::AccountsController < AuthenticatorController
   end
 
   def field_options
-    render json: { data: ManagerAccount::Account::FIELDS }
+    render json: { data: BAM::Account::FIELDS }
   end
 
   private
@@ -56,6 +56,6 @@ class ManagerAccount::AccountsController < AuthenticatorController
   end
 
   def set_account
-    @account = ManagerAccount::Account.find params[:id]
+    @account = BAM::Account.find params[:id]
   end
 end

@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: ma_items
+# Table name: bam_items
 #
 #  id              :bigint           not null, primary key
 #  description     :string
@@ -11,7 +11,7 @@
 #
 # Indexes
 #
-#  index_ma_items_on_account_user_id  (account_user_id)
+#  index_bam_items_on_account_user_id  (account_user_id)
 #
 # Foreign Keys
 #
@@ -20,7 +20,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ManagerAccount::Item, type: :model do
+RSpec.describe BAM::Item, type: :model do
   let!(:user) { create(:user) }
   let!(:account) { create(:account) }
   let!(:au) { create(:account_user, user: user, account: account) }
@@ -37,26 +37,26 @@ RSpec.describe ManagerAccount::Item, type: :model do
   describe 'business rules' do
     context 'insert' do
       it 'must save' do
-        item = build(:ma_item, au: au, name: Faker::Name.name)
+        item = build(:bam_item, au: au, name: Faker::Name.name)
 
         facade = Facade.new(account_user: au)
         facade.insert item
         expect(facade.status).to eq(:green)
-        expect(MA::Item.count).to eq(1)
+        expect(BAM::Item.count).to eq(1)
         expect(Event.count).to eq(0)
       end
 
       it "don't must save already exits name", :events do
         name = Faker::Name.name
-        create(:ma_item, au: au, name: name)
-        item = build(:ma_item, au: au, name: name)
+        create(:bam_item, au: au, name: name)
+        item = build(:bam_item, au: au, name: name)
 
         expect do
           facade = Facade.new(account_user: au)
           facade.insert item
           expect(facade.status).to eq(:red)
           expect(facade.errors.count).to eq(1)
-        end.to change(MA::Item, :count).by(0)
+        end.to change(BAM::Item, :count).by(0)
 
         expect(Event.count).to eq(0)
       end
@@ -64,7 +64,7 @@ RSpec.describe ManagerAccount::Item, type: :model do
 
     context 'update' do
       it 'must update' do
-        item = create(:ma_item, au: au, name: Faker::Name.name)
+        item = create(:bam_item, au: au, name: Faker::Name.name)
         name = Faker::Name.name
         item.name = name
         facade = Facade.new(account_user: au)
@@ -77,24 +77,24 @@ RSpec.describe ManagerAccount::Item, type: :model do
     context 'delete' do
       it 'decrease one item' do
 
-        item = create(:ma_item, au: au)
+        item = create(:bam_item, au: au)
         expect {
           Facade.new(account_user: au).delete(item)
-        }.to change(MA::Item, :count).by(-1)
+        }.to change(BAM::Item, :count).by(-1)
 
         expect(Event.count).to eq(0)
       end
 
       it 'return error account with association' do
-        item = create(:ma_item, au: au)
+        item = create(:bam_item, au: au)
 
-        ma_account = create(:ma_account, au: au)
-        create(:ma_transaction, au: au, ma_item: item, ma_account: ma_account)
+        bam_account = create(:bam_account, au: au)
+        create(:bam_transaction, au: au, bam_item: item, bam_account: bam_account)
         expect {
           facade = Facade.new(account_user: au)
           facade.delete(item)
           expect(facade.status).to eq(:red)
-        }.to change(MA::Item, :count).by(0)
+        }.to change(BAM::Item, :count).by(0)
 
         expect(Event.count).to eq(0)
       end
@@ -104,9 +104,9 @@ RSpec.describe ManagerAccount::Item, type: :model do
 
       it 'return list of items' do
         amount = 10
-        create_list(:ma_item, amount, au: au)
+        create_list(:bam_item, amount, au: au)
         facade = Facade.new(account_user: au)
-        facade.select MA::Item.to_s
+        facade.select BAM::Item.to_s
         expect(facade.data.count).to eq(amount)
       end
     end

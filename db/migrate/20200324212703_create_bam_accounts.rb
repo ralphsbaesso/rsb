@@ -1,6 +1,6 @@
-class CreateManagerAccountAccounts < ActiveRecord::Migration[5.2]
+class CreateBAMAccounts < ActiveRecord::Migration[5.2]
   def change
-    create_table :ma_accounts do |t|
+    create_table :bam_accounts do |t|
       t.string :name
       t.string :description
       t.jsonb :fields, default: []

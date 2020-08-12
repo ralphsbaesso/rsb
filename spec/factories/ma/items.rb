@@ -11,7 +11,7 @@
 
 FactoryBot.define do
 
-  factory :ma_item, class: ManagerAccount::Item do
+  factory :bam_item, class: BAM::Item do
     name { Faker::FunnyName.name }
     account_user { nil }
   end

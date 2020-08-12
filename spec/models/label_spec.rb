@@ -36,7 +36,7 @@ RSpec.describe Label, type: :model do
   describe 'business rules' do
     context 'insert' do
       it 'must save' do
-        label = build(:label, au: au, app: :manager_account)
+        label = build(:label, au: au, app: :bam)
 
         facade = Facade.new(account_user: au)
         facade.insert label
@@ -47,7 +47,7 @@ RSpec.describe Label, type: :model do
 
       it "don't must save already exits name", :events do
         name = 'Aeiou'
-        app = :manager_account
+        app = :bam
         first_label = build(:label, au: au, app: app, name: name)
         facade = Facade.new(account_user: au)
         facade.insert first_label

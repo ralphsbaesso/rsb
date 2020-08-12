@@ -23,9 +23,9 @@ class AccountUser < ApplicationRecord
   belongs_to :account
   belongs_to :user
 
-  has_many :ma_items, class_name: 'ManagerAccount::Item'
-  has_many :ma_accounts, class_name: 'ManagerAccount::Account'
-  has_many :ma_transactions, class_name: 'ManagerAccount::Transaction'
+  has_many :bam_items, class_name: 'BAM::Item'
+  has_many :bam_accounts, class_name: 'BAM::Account'
+  has_many :bam_transactions, class_name: 'BAM::Transaction'
 
   has_many :labels
 

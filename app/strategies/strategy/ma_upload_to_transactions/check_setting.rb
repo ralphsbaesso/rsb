@@ -1,7 +1,7 @@
 class Strategy::MAUploadToTransactions::CheckSetting < Strategy
 
   def process
-    account = model.ma_account
+    account = model.bam_account
     fields = account.fields
 
     unless fields.present?

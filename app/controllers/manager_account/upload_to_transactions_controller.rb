@@ -1,7 +1,7 @@
-class ManagerAccount::UploadToTransactionsController < AuthenticatorController
+class BAM::UploadToTransactionsController < AuthenticatorController
 
   def index
-    render json: { data: ManagerAccount::Structure.description_options }
+    render json: { data: BAM::Structure.description_options }
   end
 
   def create

@@ -31,6 +31,53 @@ ActiveRecord::Schema.define(version: 2020_07_08_224825) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "bam_accounts", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.jsonb "fields", default: []
+    t.string "account_type"
+    t.bigint "account_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_user_id"], name: "index_bam_accounts_on_account_user_id"
+  end
+
+  create_table "bam_items", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.bigint "account_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_user_id"], name: "index_bam_items_on_account_user_id"
+  end
+
+  create_table "bam_transactions", force: :cascade do |t|
+    t.string "description"
+    t.integer "price_cents", default: 0
+    t.float "amount", default: 0.0
+    t.string "origin"
+    t.string "status"
+    t.date "transaction_date"
+    t.date "pay_date"
+    t.bigint "bam_item_id"
+    t.bigint "bam_subitem_id"
+    t.bigint "bam_account_id"
+    t.bigint "account_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_user_id"], name: "index_bam_transactions_on_account_user_id"
+    t.index ["bam_account_id"], name: "index_bam_transactions_on_bam_account_id"
+    t.index ["bam_item_id"], name: "index_bam_transactions_on_bam_item_id"
+    t.index ["bam_subitem_id"], name: "index_bam_transactions_on_bam_subitem_id"
+  end
+
+  create_table "bam_transactions_labels", force: :cascade do |t|
+    t.bigint "label_id"
+    t.bigint "bam_transaction_id"
+    t.index ["bam_transaction_id"], name: "index_bam_transactions_labels_on_bam_transaction_id"
+    t.index ["label_id"], name: "index_bam_transactions_labels_on_label_id"
+  end
+
   create_table "events", force: :cascade do |t|
     t.bigint "account_user_id"
     t.string "rsb_module"
@@ -61,53 +108,6 @@ ActiveRecord::Schema.define(version: 2020_07_08_224825) do
     t.datetime "updated_at", null: false
     t.index ["account_user_id", "app", "name"], name: "index_labels_on_account_user_id_and_app_and_name"
     t.index ["account_user_id"], name: "index_labels_on_account_user_id"
-  end
-
-  create_table "labels_ma_transactions", force: :cascade do |t|
-    t.bigint "label_id"
-    t.bigint "ma_transaction_id"
-    t.index ["label_id"], name: "index_labels_ma_transactions_on_label_id"
-    t.index ["ma_transaction_id"], name: "index_labels_ma_transactions_on_ma_transaction_id"
-  end
-
-  create_table "ma_accounts", force: :cascade do |t|
-    t.string "name"
-    t.string "description"
-    t.jsonb "fields", default: []
-    t.string "account_type"
-    t.bigint "account_user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_user_id"], name: "index_ma_accounts_on_account_user_id"
-  end
-
-  create_table "ma_items", force: :cascade do |t|
-    t.string "name"
-    t.string "description"
-    t.bigint "account_user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_user_id"], name: "index_ma_items_on_account_user_id"
-  end
-
-  create_table "ma_transactions", force: :cascade do |t|
-    t.string "description"
-    t.integer "price_cents", default: 0
-    t.float "amount", default: 0.0
-    t.string "origin"
-    t.string "status"
-    t.date "transaction_date"
-    t.date "pay_date"
-    t.bigint "ma_item_id"
-    t.bigint "ma_subitem_id"
-    t.bigint "ma_account_id"
-    t.bigint "account_user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_user_id"], name: "index_ma_transactions_on_account_user_id"
-    t.index ["ma_account_id"], name: "index_ma_transactions_on_ma_account_id"
-    t.index ["ma_item_id"], name: "index_ma_transactions_on_ma_item_id"
-    t.index ["ma_subitem_id"], name: "index_ma_transactions_on_ma_subitem_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -142,11 +142,11 @@ ActiveRecord::Schema.define(version: 2020_07_08_224825) do
 
   add_foreign_key "account_users", "accounts"
   add_foreign_key "account_users", "users"
+  add_foreign_key "bam_accounts", "account_users"
+  add_foreign_key "bam_items", "account_users"
+  add_foreign_key "bam_transactions", "account_users"
+  add_foreign_key "bam_transactions", "bam_accounts"
+  add_foreign_key "bam_transactions_labels", "bam_transactions"
+  add_foreign_key "bam_transactions_labels", "labels"
   add_foreign_key "labels", "account_users"
-  add_foreign_key "labels_ma_transactions", "labels"
-  add_foreign_key "labels_ma_transactions", "ma_transactions"
-  add_foreign_key "ma_accounts", "account_users"
-  add_foreign_key "ma_items", "account_users"
-  add_foreign_key "ma_transactions", "account_users"
-  add_foreign_key "ma_transactions", "ma_accounts"
 end

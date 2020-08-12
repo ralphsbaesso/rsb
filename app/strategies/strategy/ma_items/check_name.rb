@@ -3,7 +3,7 @@ class Strategy::MAItems::CheckName < Strategy
   def process
     item = model
 
-    if current_account_user.ma_items.where(name: item.name).first
+    if current_account_user.bam_items.where(name: item.name).first
       add_message 'Nome já em uso.'
       set_status :red
     end

@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: ma_transactions
+# Table name: bam_transactions
 #
 #  id               :bigint           not null, primary key
 #  amount           :float            default(0.0)
@@ -13,31 +13,31 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  account_user_id  :bigint
-#  ma_account_id    :bigint
-#  ma_item_id       :bigint
-#  ma_subitem_id    :bigint
+#  bam_account_id   :bigint
+#  bam_item_id      :bigint
+#  bam_subitem_id   :bigint
 #
 # Indexes
 #
-#  index_ma_transactions_on_account_user_id  (account_user_id)
-#  index_ma_transactions_on_ma_account_id    (ma_account_id)
-#  index_ma_transactions_on_ma_item_id       (ma_item_id)
-#  index_ma_transactions_on_ma_subitem_id    (ma_subitem_id)
+#  index_bam_transactions_on_account_user_id  (account_user_id)
+#  index_bam_transactions_on_bam_account_id   (bam_account_id)
+#  index_bam_transactions_on_bam_item_id      (bam_item_id)
+#  index_bam_transactions_on_bam_subitem_id   (bam_subitem_id)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (account_user_id => account_users.id)
-#  fk_rails_...  (ma_account_id => ma_accounts.id)
+#  fk_rails_...  (bam_account_id => bam_accounts.id)
 #
 
 require 'rails_helper'
 
-RSpec.describe MA::Transaction, type: :model do
+RSpec.describe BAM::Transaction, type: :model do
   let!(:user) { create(:user) }
   let!(:account) { create(:account) }
   let!(:au) { create(:account_user, user: user, account: account) }
-  let(:ma_account) { create(:ma_account, au: au) }
-  let(:item) { create(:ma_item, au: au) }
+  let(:bam_account) { create(:bam_account, au: au) }
+  let(:item) { create(:bam_item, au: au) }
 
   after do
     events(:error)
@@ -45,9 +45,9 @@ RSpec.describe MA::Transaction, type: :model do
 
   context 'Save' do
     it 'increase one transaction' do
-      transaction = MA::Transaction.new(
+      transaction = BAM::Transaction.new(
         au: au,
-        ma_account: ma_account,
+        bam_account: bam_account,
         transaction_date: Date.today
       )
 
@@ -56,15 +56,15 @@ RSpec.describe MA::Transaction, type: :model do
         facade.insert(transaction)
         expect(facade.status_green?).to be_truthy
         expect(transaction.transaction_date).to eq(transaction.pay_date)
-      end.to change(MA::Transaction, :count).by(1)
+      end.to change(BAM::Transaction, :count).by(1)
     end
 
     it 'increase one transaction with associations' do
-      item = create(:ma_item, au: au)
+      item = create(:bam_item, au: au)
 
-      transaction = MA::Transaction.new(
+      transaction = BAM::Transaction.new(
         au: au,
-        ma_account: ma_account,
+        bam_account: bam_account,
         transaction_date: Date.today,
         item: item
       )
@@ -74,12 +74,12 @@ RSpec.describe MA::Transaction, type: :model do
         facade.insert(transaction)
         expect(facade.status_green?).to be_truthy
         expect(transaction.transaction_date).to eq(transaction.pay_date)
-        expect(transaction.ma_item_id).to eq(item.id)
-      end.to change(MA::Transaction, :count).by(1)
+        expect(transaction.bam_item_id).to eq(item.id)
+      end.to change(BAM::Transaction, :count).by(1)
     end
 
     it "don't save with invalids fields" do
-      transaction = MA::Transaction.new
+      transaction = BAM::Transaction.new
 
       expect do
         facade = Facade.new(account_user: au)
@@ -89,14 +89,14 @@ RSpec.describe MA::Transaction, type: :model do
         expect(facade.errors.count).to eq(2)
         expect(facade.errors.first).to eq('Data da transação inválida.')
         expect(facade.errors.last).to eq('Deve associar a transação ao uma Conta.')
-      end.to change(MA::Transaction, :count).by(0)
+      end.to change(BAM::Transaction, :count).by(0)
     end
 
   end
 
   context 'update' do
     it 'modify attributes' do
-      transaction = create(:ma_transaction, au: au, ma_account: ma_account)
+      transaction = create(:bam_transaction, au: au, bam_account: bam_account)
 
       new_price = Money.new(transaction.price_cents + 1)
       new_description = Faker::Book.publisher
@@ -116,12 +116,12 @@ RSpec.describe MA::Transaction, type: :model do
 
   context 'delete' do
     it 'decrease one item' do
-      transaction = create(:ma_transaction, au: au, ma_account: ma_account)
+      transaction = create(:bam_transaction, au: au, bam_account: bam_account)
 
       expect do
         facade = Facade.new(account_user: au)
         facade.delete(transaction)
-        end.to change(MA::Transaction, :count).by(-1)
+        end.to change(BAM::Transaction, :count).by(-1)
     end
 
   end
@@ -131,26 +131,26 @@ RSpec.describe MA::Transaction, type: :model do
     it 'all' do
       size = [5, 7, 8].sample
       size.times do
-        create(:ma_transaction, au: au, ma_account: ma_account)
+        create(:bam_transaction, au: au, bam_account: bam_account)
       end
 
       facade = Facade.new(account_user: au)
-      facade.select MA::Transaction
+      facade.select BAM::Transaction
       expect(facade.data.count).to eq(size)
     end
 
     it 'with label' do
       [2, 5, 6].sample.times do
-        create(:ma_transaction, au: au, ma_account: ma_account)
+        create(:bam_transaction, au: au, bam_account: bam_account)
       end
 
-      transaction = MA::Transaction.all.sample
+      transaction = BAM::Transaction.all.sample
       label = build(:label, au: au)
       transaction.labels << label
       transaction.save
 
       facade = Facade.new(account_user: au)
-      facade.select MA::Transaction, filter: { label_id: label.id }
+      facade.select BAM::Transaction, filter: { label_id: label.id }
       expect(facade.data.count).to eq(1)
     end
 

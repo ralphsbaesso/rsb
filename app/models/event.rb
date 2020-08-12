@@ -28,16 +28,15 @@ class Event < ApplicationRecord
   belongs_to :account_user, optional: true
   
   alias_attribute :type, :event_type
-  alias_attribute :module, :rsb_module
 
-  def self.add(message:, rsb_module:, account_user: nil, type: nil, action: nil, important: nil, **details)
+  def self.add(message:, app:, account_user: nil, type: nil, action: nil, important: nil, **details)
     account_user = account_user.is_a?(AccountUser) ? account_user : AccountUser.find_by(id: account_user) if account_user
     user_email = details[:user_mail] || account_user&.user&.email
     action = %i[insert delete update list].include?(action) ? action : :any
 
     create!(
       message: message,
-      rsb_module: rsb_module,
+      app: app,
       account_user: account_user,
       user_email: user_email,
       event_type: type,
@@ -49,9 +48,9 @@ class Event < ApplicationRecord
     e
   end
 
-  def self.add!(message:, rsb_module:, account: nil, user: nil, type: nil, action: nil, important: nil, **detail)
+  def self.add!(message:, app:, account: nil, user: nil, type: nil, action: nil, important: nil, **detail)
     data = add message: message,
-               rsb_module: rsb_module,
+               app: app,
                account: account,
                user: user,
                type: type,
