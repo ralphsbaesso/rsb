@@ -1,6 +1,6 @@
 
 class ManagerAccount::UploadToTransaction
-  include RFacade::Mapper
+  include RuleBox::Mapper
 
   attr_reader :ma_account, :file
   attr_accessor :pay_date

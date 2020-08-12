@@ -2,24 +2,24 @@ class ManagerAccount::AccountsController < AuthenticatorController
   before_action :set_account, only: [:show, :update, :destroy]
 
   def index
-    transporter = facade.select ManagerAccount::Account
+    facade.select 'ManagerAccount::Account'
 
-    if transporter.status_green?
-      render json: transporter.to_data(:items)
+    if facade.status_green?
+      render json: facade.to_data(:data)
     else
-      render json: { errors: transporter.messages }, status: :unprocessable_entity
+      render json: { errors: facade.errors }, status: :unprocessable_entity
     end
   end
 
   def create
     account = ManagerAccount::Account.new(account_parameter)
     account.au = current_ac
-    transporter = facade.insert account
+    facade.insert account
 
-    if transporter.status == :green
-      render json: transporter.to_data
+    if facade.status_green?
+      render json: facade.to_data
     else
-      render json: { errors: transporter.messages }, status: :unprocessable_entity
+      render json: { errors: facade.errors }, status: :unprocessable_entity
     end
   end
 
@@ -28,10 +28,10 @@ class ManagerAccount::AccountsController < AuthenticatorController
   end
 
   def destroy
-    transporter = facade.delete @account
-    return if transporter.status == :green
+    facade.delete @account
+    return if facade.status_green?
 
-    render json: { errors: transporter.messages }, status: :unprocessable_entity
+    render json: { errors: facade.errors }, status: :unprocessable_entity
   end
 
   def update

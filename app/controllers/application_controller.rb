@@ -19,8 +19,13 @@ class ApplicationController < ActionController::API
     @current_account_user
   end
 
-  def facade
-    Facade.new(@current_account_user)
+  def facade(new_facade = false)
+    @facade = false if new_facade
+    @facade ||= Facade.new(account_user: @current_account_user)
+  end
+
+  def build_facade
+    Facade.new(account_user: @current_account_user)
   end
 
 end

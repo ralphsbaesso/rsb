@@ -39,7 +39,7 @@ RSpec.describe ManagerAccount::Item, type: :model do
       it 'must save' do
         item = build(:ma_item, au: au, name: Faker::Name.name)
 
-        facade = RFacade.new(account_user: au)
+        facade = Facade.new(account_user: au)
         facade.insert item
         expect(facade.status).to eq(:green)
         expect(MA::Item.count).to eq(1)
@@ -52,7 +52,7 @@ RSpec.describe ManagerAccount::Item, type: :model do
         item = build(:ma_item, au: au, name: name)
 
         expect do
-          facade = RFacade.new(account_user: au)
+          facade = Facade.new(account_user: au)
           facade.insert item
           expect(facade.status).to eq(:red)
           expect(facade.errors.count).to eq(1)
@@ -67,7 +67,7 @@ RSpec.describe ManagerAccount::Item, type: :model do
         item = create(:ma_item, au: au, name: Faker::Name.name)
         name = Faker::Name.name
         item.name = name
-        facade = RFacade.new(account_user: au)
+        facade = Facade.new(account_user: au)
         facade.update item
         expect(facade.status).to eq(:green)
         expect(item.name).to eq(name)
@@ -79,7 +79,7 @@ RSpec.describe ManagerAccount::Item, type: :model do
 
         item = create(:ma_item, au: au)
         expect {
-          RFacade.new(account_user: au).delete(item)
+          Facade.new(account_user: au).delete(item)
         }.to change(MA::Item, :count).by(-1)
 
         expect(Event.count).to eq(0)
@@ -91,7 +91,7 @@ RSpec.describe ManagerAccount::Item, type: :model do
         ma_account = create(:ma_account, au: au)
         create(:ma_transaction, au: au, ma_item: item, ma_account: ma_account)
         expect {
-          facade = RFacade.new(account_user: au)
+          facade = Facade.new(account_user: au)
           facade.delete(item)
           expect(facade.status).to eq(:red)
         }.to change(MA::Item, :count).by(0)
@@ -105,7 +105,7 @@ RSpec.describe ManagerAccount::Item, type: :model do
       it 'return list of items' do
         amount = 10
         create_list(:ma_item, amount, au: au)
-        facade = RFacade.new(account_user: au)
+        facade = Facade.new(account_user: au)
         facade.select MA::Item.to_s
         expect(facade.data.count).to eq(amount)
       end

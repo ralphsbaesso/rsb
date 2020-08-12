@@ -34,7 +34,7 @@ gem 'kaminari', '~> 1.2'
 # Integration of RubyMoney - Money with Rails
 gem 'money-rails', '~>1.12'
 
-gem 'r_facade', git: 'https://github.com/ralphsbaesso/r_facade'
+gem 'rule_box', git: 'https://github.com/ralphsbaesso/rule_box'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

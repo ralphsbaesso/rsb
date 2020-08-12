@@ -1,4 +1,4 @@
-RFacade.configure do |config|
+RuleBox::Facade.configure do |config|
   config.add_dependency :account_user do |value, errors|
     errors << 'Must be an "AccountUser"' unless value.is_a? AccountUser
   end

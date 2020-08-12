@@ -30,22 +30,20 @@ class Event < ApplicationRecord
   alias_attribute :type, :event_type
   alias_attribute :module, :rsb_module
 
-  def self.add(message:, rsb_module:, account_user: nil, type: nil, action: nil, important: nil, **detail)
+  def self.add(message:, rsb_module:, account_user: nil, type: nil, action: nil, important: nil, **details)
     account_user = account_user.is_a?(AccountUser) ? account_user : AccountUser.find_by(id: account_user) if account_user
-    user_email = detail[:user_mail] || account_user&.user&.email
+    user_email = details[:user_mail] || account_user&.user&.email
     action = %i[insert delete update list].include?(action) ? action : :any
 
     create!(
       message: message,
       rsb_module: rsb_module,
-      account: account,
-      user: user,
+      account_user: account_user,
       user_email: user_email,
       event_type: type,
       action: action,
       important: important.present?,
-      detail: detail.as_json,
-      metadata: metadata
+      details: details.as_json
     )
   rescue StandardError => e
     e

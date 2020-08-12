@@ -1,4 +1,4 @@
-class Strategy < RFacade::Strategy
+class Strategy < RuleBox::Strategy
 
   def current_user
     @current_user ||= current_account_user&.user

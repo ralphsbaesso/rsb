@@ -2,12 +2,12 @@ class ManagerAccount::ItemsController < AuthenticatorController
   before_action :set_item, only: [:show, :update, :destroy]
 
   def index
-    transporter = facade.select ManagerAccount::Item
+    facade.select ManagerAccount::Item
 
-    if transporter.status_green?
-      render json: transporter.to_data(:items)
+    if facade.status_green?
+      render json: facade.to_data(:data, json_options: { include: :labels})
     else
-      render json: { errors: transporter.messages }, status: :unprocessable_entity
+      render json: { errors: facade.errors }, status: :unprocessable_entity
     end
   end
 

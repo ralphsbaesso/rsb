@@ -19,7 +19,7 @@
 #
 
 class ManagerAccount::Item < ApplicationRecord
-  include RFacade::Mapper
+  include RuleBox::Mapper
 
   belongs_to :account_user
   has_many :ma_transactions, class_name: 'ManagerAccount::Transaction', foreign_key: :ma_item_id

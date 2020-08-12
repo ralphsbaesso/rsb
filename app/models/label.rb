@@ -23,7 +23,7 @@
 #
 
 class Label < ApplicationRecord
-  include RFacade::Mapper
+  include RuleBox::Mapper
   belongs_to :account_user
   alias_attribute :au, :account_user
 

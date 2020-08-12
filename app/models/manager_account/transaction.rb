@@ -33,7 +33,7 @@
 require_relative '../manager_account'
 
 class ManagerAccount::Transaction < ApplicationRecord
-  include RFacade::Mapper
+  include RuleBox::Mapper
 
   belongs_to :ma_item, optional: true, class_name: 'ManagerAccount::Item'
   belongs_to :ma_account, class_name: 'ManagerAccount::Account'
