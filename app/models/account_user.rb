@@ -23,6 +23,8 @@ class AccountUser < ApplicationRecord
   belongs_to :account
   belongs_to :user
 
+  has_many :labels
+
   has_many :bam_items, class_name: 'BAM::Item'
   has_many :bam_accounts, class_name: 'BAM::Account'
   has_many :bam_transactions, class_name: 'BAM::Transaction'

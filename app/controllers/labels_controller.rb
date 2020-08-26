@@ -8,28 +8,28 @@ class LabelsController < AuthenticatorController
   def create
     label = Label.new(label_parameter)
     label.account_user = current_account_user
-    transporter = facade.insert label
+    facade.insert label
 
-    if transporter.status == :green
-      render json: transporter.to_data
+    if facade.status_green?
+      render json: facade.to_data
     else
-      render json: { errors: transporter.messages }, status: :unprocessable_entity
+      render json: { errors: facade.errors }, status: :unprocessable_entity
     end
   end
 
   def update
     @label.assign_attributes(label_parameter)
-    transporter = facade.insert @label
+    facade.insert @label
 
-    if transporter.status == :green
-      render json: transporter.to_data
+    if facade.status_green?
+      render json: facade.to_data
     else
-      render json: { errors: transporter.messages }, status: :unprocessable_entity
+      render json: { errors: facade.errors }, status: :unprocessable_entity
     end
   end
 
   def set_resources
-    pp params
+    resources = params[resources]
 
     render json: :ok
   end

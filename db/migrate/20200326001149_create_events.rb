@@ -15,7 +15,7 @@ class CreateEvents < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_index :events, [:account_user_id, :rsb_module]
+    add_index :events, [:account_user_id, :app]
     add_index :events, [:account_user_id, :user_email]
     add_index :events, [:account_user_id, :important]
   end

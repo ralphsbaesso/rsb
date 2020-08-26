@@ -64,5 +64,82 @@ RSpec.describe Label, type: :model do
       end
     end
 
+    context 'set_resources' do
+
+      it 'one resource for one label' do
+        label = create(:label, au: au, app: :bam)
+        labels = [{ id: label.id, selected: true }]
+        bam_account = create(:bam_account, au: au)
+        resources = [{ id: bam_account.id, klass: bam_account.class.name }]
+
+        facade = Facade.new(account_user: au)
+        facade.set_resources :label,
+                             app: :bam,
+                             labels: labels,
+                             resources: resources
+
+        expect(facade.status_green?).to be_truthy
+        expect(bam_account.associated_labels.count).to eq(1)
+
+        # duplicated, don't increase
+        labels = [{ id: label.id, selected: true }]
+        facade = Facade.new(account_user: au)
+        facade.set_resources :label,
+                             app: :bam,
+                             labels: labels,
+                             resources: resources
+
+        expect(facade.status_green?).to be_truthy
+        expect(bam_account.associated_labels.count).to eq(1)
+
+        # deselected
+        labels = [{ id: label.id, selected: false }]
+        facade = Facade.new(account_user: au)
+        facade.set_resources :label,
+                             app: :bam,
+                             labels: labels,
+                             resources: resources
+
+        expect(facade.status_green?).to be_truthy
+        expect(bam_account.associated_labels.count).to eq(0)
+      end
+
+      it 'two resource for three label' do
+        label = create(:label, au: au, app: :bam)
+        label1 = create(:label, au: au, app: :bam)
+        label2 = create(:label, au: au, app: :bam)
+
+        bam_account = create(:bam_account, au: au)
+        bam_account1 = create(:bam_account, au: au)
+        klass = BAM::Account.to_s
+
+        labels = [label, label1, label2].map { |l| { id: l.id, selected: true}}
+        resources = [{ id: bam_account.id, klass: klass }, { id: bam_account1.id, klass: klass }]
+
+        facade = Facade.new(account_user: au)
+        facade.set_resources :label,
+                             app: :bam,
+                             labels: labels,
+                             resources: resources
+
+        expect(facade.status_green?).to be_truthy
+        expect(bam_account.associated_labels.count).to eq(3)
+        expect(bam_account1.associated_labels.count).to eq(3)
+
+        # deselected
+        labels = [{ id: label.id, selected: false }]
+        facade = Facade.new(account_user: au)
+        facade.set_resources :label,
+                             app: :bam,
+                             labels: labels,
+                             resources: resources
+
+        expect(facade.status_green?).to be_truthy
+        expect(bam_account.associated_labels.count).to eq(2)
+
+        expect(Label.count).to eq(3)
+      end
+
+    end
   end
 end

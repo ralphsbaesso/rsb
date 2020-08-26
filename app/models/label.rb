@@ -24,12 +24,20 @@
 
 class Label < ApplicationRecord
   include RuleBox::Mapper
+  attr_accessor :selected
+
   belongs_to :account_user
+  has_many :associated_labels
   alias_attribute :au, :account_user
 
   rules_of_insert Strategy::Labels::CheckApp,
                   Strategy::Labels::SetName,
                   Strategy::Labels::CheckExits,
                   Strategy::Shares::SaveModel
+
+  rules_of :set_resources,
+           Strategy::Labels::CheckLabels,
+           Strategy::Labels::CheckResources,
+           Strategy::Labels::UpdateResources
 
 end

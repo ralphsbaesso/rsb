@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_08_224825) do
+ActiveRecord::Schema.define(version: 2020_08_12_234340) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,16 @@ ActiveRecord::Schema.define(version: 2020_07_08_224825) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "associated_labels", force: :cascade do |t|
+    t.string "owner_type"
+    t.bigint "owner_id"
+    t.bigint "label_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["label_id"], name: "index_associated_labels_on_label_id"
+    t.index ["owner_type", "owner_id"], name: "index_associated_labels_on_owner_type_and_owner_id"
   end
 
   create_table "bam_accounts", force: :cascade do |t|
@@ -71,16 +81,9 @@ ActiveRecord::Schema.define(version: 2020_07_08_224825) do
     t.index ["bam_subitem_id"], name: "index_bam_transactions_on_bam_subitem_id"
   end
 
-  create_table "bam_transactions_labels", force: :cascade do |t|
-    t.bigint "label_id"
-    t.bigint "bam_transaction_id"
-    t.index ["bam_transaction_id"], name: "index_bam_transactions_labels_on_bam_transaction_id"
-    t.index ["label_id"], name: "index_bam_transactions_labels_on_label_id"
-  end
-
   create_table "events", force: :cascade do |t|
     t.bigint "account_user_id"
-    t.string "rsb_module"
+    t.string "app"
     t.string "service"
     t.string "message"
     t.string "event_type"
@@ -91,8 +94,8 @@ ActiveRecord::Schema.define(version: 2020_07_08_224825) do
     t.jsonb "details", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["account_user_id", "app"], name: "index_events_on_account_user_id_and_app"
     t.index ["account_user_id", "important"], name: "index_events_on_account_user_id_and_important"
-    t.index ["account_user_id", "rsb_module"], name: "index_events_on_account_user_id_and_rsb_module"
     t.index ["account_user_id", "user_email"], name: "index_events_on_account_user_id_and_user_email"
     t.index ["account_user_id"], name: "index_events_on_account_user_id"
   end
@@ -142,11 +145,10 @@ ActiveRecord::Schema.define(version: 2020_07_08_224825) do
 
   add_foreign_key "account_users", "accounts"
   add_foreign_key "account_users", "users"
+  add_foreign_key "associated_labels", "labels"
   add_foreign_key "bam_accounts", "account_users"
   add_foreign_key "bam_items", "account_users"
   add_foreign_key "bam_transactions", "account_users"
   add_foreign_key "bam_transactions", "bam_accounts"
-  add_foreign_key "bam_transactions_labels", "bam_transactions"
-  add_foreign_key "bam_transactions_labels", "labels"
   add_foreign_key "labels", "account_users"
 end

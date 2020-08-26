@@ -37,7 +37,8 @@ class BAM::Transaction < ApplicationRecord
   belongs_to :bam_account, class_name: 'BAM::Account'
   belongs_to :account_user
 
-  has_and_belongs_to_many :labels, foreign_key: :bam_transaction_id
+  has_many :associated_labels, as: :owner
+  has_many :labels, through: :associated_labels
 
   alias_attribute :au, :account_user
   alias_attribute :item, :bam_item
