@@ -18,10 +18,10 @@ class BAM::UploadToTransaction
     @bam_account = bam_account
   end
 
-  rules_of_insert Strategy::MAUploadToTransactions::CheckSetting,
-                  Strategy::MAUploadToTransactions::CheckType,
-                  Strategy::MAUploadToTransactions::Parse,
-                  Strategy::MAUploadToTransactions::CheckExits,
-                  Strategy::MAUploadToTransactions::BuildTransactions
+  rules_of_insert Strategy::BAMUploadToTransactions::CheckSetting,
+                  Strategy::BAMUploadToTransactions::CheckType,
+                  Strategy::BAMUploadToTransactions::Parse,
+                  Strategy::BAMUploadToTransactions::CheckExits,
+                  Strategy::BAMUploadToTransactions::BuildTransactions
 
 end

@@ -14,15 +14,15 @@
 #  updated_at       :datetime         not null
 #  account_user_id  :bigint
 #  bam_account_id   :bigint
+#  bam_category_id  :bigint
 #  bam_item_id      :bigint
-#  bam_subitem_id   :bigint
 #
 # Indexes
 #
 #  index_bam_transactions_on_account_user_id  (account_user_id)
 #  index_bam_transactions_on_bam_account_id   (bam_account_id)
+#  index_bam_transactions_on_bam_category_id  (bam_category_id)
 #  index_bam_transactions_on_bam_item_id      (bam_item_id)
-#  index_bam_transactions_on_bam_subitem_id   (bam_subitem_id)
 #
 # Foreign Keys
 #

@@ -36,6 +36,7 @@ class Label < ApplicationRecord
                   Strategy::Shares::SaveModel
 
   rules_of :set_resources,
+           Strategy::Labels::CheckAppToResources,
            Strategy::Labels::CheckLabels,
            Strategy::Labels::CheckResources,
            Strategy::Labels::UpdateResources

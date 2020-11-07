@@ -34,27 +34,29 @@ gem 'kaminari', '~> 1.2'
 # Integration of RubyMoney - Money with Rails
 gem 'money-rails', '~>1.12'
 
-gem 'rule_box', git: 'https://github.com/ralphsbaesso/rule_box'
+gem 'rule_box'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 
-  gem 'rspec-rails', '~> 4.0.0'
   gem 'factory_bot_rails'
 
   gem 'faker', '~> 2.11'
+  gem 'rspec-rails', '~> 4.0.0'
 end
 
 group :development do
+  gem 'annotate'
+  gem 'better_errors'
   gem 'listen', '>= 3.0.5', '< 3.2'
+
+  gem 'pry-rails'
+  # Rails ERD - Generate Entity-Relationship Diagrams for Rails applications
+  gem 'rails-erd'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
-
-  gem 'annotate'
-  gem 'better_errors'
-  gem 'pry-rails'
 end
 
 

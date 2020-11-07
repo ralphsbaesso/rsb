@@ -25,8 +25,6 @@ class BAM::Account < ApplicationRecord
 
   belongs_to :account_user
   has_many :bam_transactions, class_name: 'BAM::Transaction', foreign_key: :bam_account_id
-  has_many :associated_labels, as: :owner
-  has_many :labels, through: :associated_labels
 
   alias_attribute :au, :account_user
   alias_attribute :type, :account_type
@@ -38,10 +36,10 @@ class BAM::Account < ApplicationRecord
   rules_of_update Strategy::Shares::CheckName,
                   Strategy::Shares::SaveModel
 
-  rules_of_delete Strategy::MAAccounts::CheckAssociation,
+  rules_of_delete Strategy::BAMAccounts::CheckAssociation,
                   Strategy::Shares::DestroyModel
 
-  rules_of_select Strategy::MAAccounts::Filter
+  rules_of_select Strategy::BAMAccounts::Filter
 
 
   FIELDS = [

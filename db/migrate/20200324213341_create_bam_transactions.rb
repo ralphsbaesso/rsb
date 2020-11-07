@@ -9,7 +9,7 @@ class CreateBAMTransactions < ActiveRecord::Migration[5.2]
       t.date :transaction_date
       t.date :pay_date
       t.references :bam_item
-      t.references :bam_subitem
+      t.references :bam_category
       t.references :bam_account, foreign_key: true
       t.references :account_user, foreign_key: true
 

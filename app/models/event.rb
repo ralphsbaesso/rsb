@@ -25,9 +25,12 @@
 #
 
 class Event < ApplicationRecord
+  include RuleBox::Mapper
+
   belongs_to :account_user, optional: true
-  
   alias_attribute :type, :event_type
+
+  rules_of_select Strategy::Events::Filter
 
   def self.add(message:, app:, account_user: nil, type: nil, action: nil, important: nil, **details)
     account_user = account_user.is_a?(AccountUser) ? account_user : AccountUser.find_by(id: account_user) if account_user

@@ -2,36 +2,47 @@ class LabelsController < AuthenticatorController
   before_action :set_label, only: [:update, :destroy]
 
   def index
-    render json: { data: current_account_user.labels.where(app: params[:app]) }
+    pp params
+    puts '<>' * 100
+    render json:{}# { data: current_account_user.labels.where(app: params[:app]) }
   end
 
   def create
     label = Label.new(label_parameter)
     label.account_user = current_account_user
-    facade.insert label
+    facade = build_facade.insert label
 
     if facade.status_green?
-      render json: facade.to_data
+      render json: to_data(data: label)
     else
-      render json: { errors: facade.errors }, status: :unprocessable_entity
+      render json: to_data(errors: facade.errors), status: :unprocessable_entity
     end
   end
 
   def update
     @label.assign_attributes(label_parameter)
-    facade.insert @label
+    facade = build_facade.insert @label
 
     if facade.status_green?
-      render json: facade.to_data
+      render json: to_data(data: @label)
     else
-      render json: { errors: facade.errors }, status: :unprocessable_entity
+      render json: to_data(errors: facade.errors), status: :unprocessable_entity
     end
   end
 
   def set_resources
-    resources = params[resources]
+    resources = params[:resources]
+    app = params[:app]
+    labels = params[:labels]
 
-    render json: :ok
+    facade = build_facade.set_resources :label, labels: labels, resources: resources, app: app
+
+    if facade.status_green?
+      render json: to_data(data: { labels: labels, resources: resources })
+    else
+      render json: to_data(errors: facade.errors), status: :unprocessable_entity
+    end
+
   end
 
   private

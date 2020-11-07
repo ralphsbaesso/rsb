@@ -52,6 +52,17 @@ ActiveRecord::Schema.define(version: 2020_08_12_234340) do
     t.index ["account_user_id"], name: "index_bam_accounts_on_account_user_id"
   end
 
+  create_table "bam_categories", force: :cascade do |t|
+    t.string "name"
+    t.string "level"
+    t.string "description"
+    t.bigint "account_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_user_id", "name"], name: "index_bam_categories_on_account_user_id_and_name", unique: true
+    t.index ["account_user_id"], name: "index_bam_categories_on_account_user_id"
+  end
+
   create_table "bam_items", force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -70,15 +81,15 @@ ActiveRecord::Schema.define(version: 2020_08_12_234340) do
     t.date "transaction_date"
     t.date "pay_date"
     t.bigint "bam_item_id"
-    t.bigint "bam_subitem_id"
+    t.bigint "bam_category_id"
     t.bigint "bam_account_id"
     t.bigint "account_user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_user_id"], name: "index_bam_transactions_on_account_user_id"
     t.index ["bam_account_id"], name: "index_bam_transactions_on_bam_account_id"
+    t.index ["bam_category_id"], name: "index_bam_transactions_on_bam_category_id"
     t.index ["bam_item_id"], name: "index_bam_transactions_on_bam_item_id"
-    t.index ["bam_subitem_id"], name: "index_bam_transactions_on_bam_subitem_id"
   end
 
   create_table "events", force: :cascade do |t|
@@ -147,6 +158,7 @@ ActiveRecord::Schema.define(version: 2020_08_12_234340) do
   add_foreign_key "account_users", "users"
   add_foreign_key "associated_labels", "labels"
   add_foreign_key "bam_accounts", "account_users"
+  add_foreign_key "bam_categories", "account_users"
   add_foreign_key "bam_items", "account_users"
   add_foreign_key "bam_transactions", "account_users"
   add_foreign_key "bam_transactions", "bam_accounts"
