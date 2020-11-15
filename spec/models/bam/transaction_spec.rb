@@ -154,5 +154,22 @@ RSpec.describe BAM::Transaction, type: :model do
       expect(facade.data.count).to eq(1)
     end
 
+    it 'by generic' do
+      phrase = 'Timão subiu no ônibus em Marrocos'
+      phrase1 = 'Vai timão'
+      phrase2 = 'Então é NATAL.'
+      [phrase, phrase1, phrase2].each do |description|
+        create(:bam_transaction, au: au, bam_account: bam_account, description: description)
+      end
+
+      facade = Facade.new(account_user: au)
+      facade.select BAM::Transaction, filter: { generic: 'natal' }
+      expect(facade.data.count).to eq(1)
+
+      facade = Facade.new(account_user: au)
+      facade.select BAM::Transaction, filter: { generic: 'TIMÃO' }
+      expect(facade.data.count).to eq(2)
+    end
+
   end
 end

@@ -59,4 +59,10 @@ class BAM::Transaction < ApplicationRecord
 
   rules_of_select Strategy::BAMTransactions::Filter
 
+  def as_json(options = nil)
+    j = super
+    j['price'] = price.to_s
+    j
+  end
+
 end

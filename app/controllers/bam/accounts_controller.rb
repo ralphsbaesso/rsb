@@ -5,7 +5,7 @@ class BAM::AccountsController < AuthenticatorController
     facade = build_facade.select 'BAM::Account'
 
     if facade.status_green?
-      render json: to_data(resource: facade.data) { |resource| resource.as_json(include: :labels) }
+      render json: to_data(resource: facade.data)
     else
       render json: to_data(errors: facade.errors), status: :unprocessable_entity
     end

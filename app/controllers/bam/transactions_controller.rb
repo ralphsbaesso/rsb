@@ -2,12 +2,12 @@ class BAM::TransactionsController < AuthenticatorController
   before_action :set_transaction, only: [:show, :update, :destroy]
 
   def index
-    facade = build_facade.select BAM::Transaction
+    associations = %i[labels bam_item bam_category bam_account]
+    facade = build_facade.select BAM::Transaction, filter: params_to_hash
 
     if facade.status_green?
       render json: to_data(resource: facade.data) { |resource|
-        resource.includes(:bam_item, :bam_account, :bam_category)
-                .as_json(include: [:bam_item, :bam_account, :bam_category])
+        resource.includes(associations) .as_json(include: associations)
       }
     else
       render json: to_data(errors: facade.errors), status: :unprocessable_entity
@@ -60,7 +60,7 @@ class BAM::TransactionsController < AuthenticatorController
                      description
                      origin
                      pay_date
-                     price_cents
+                     price
                      status
                      transaction_date
                      bam_account_id

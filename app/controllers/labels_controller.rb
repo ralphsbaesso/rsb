@@ -2,9 +2,13 @@ class LabelsController < AuthenticatorController
   before_action :set_label, only: [:update, :destroy]
 
   def index
-    pp params
-    puts '<>' * 100
-    render json:{}# { data: current_account_user.labels.where(app: params[:app]) }
+    facade = build_facade.select :label
+
+    if facade.status_green?
+      render json: to_data(resource: facade.data)
+    else
+      render json: to_data(errors: facade.errors), status: :unprocessable_entity
+    end
   end
 
   def create
@@ -22,6 +26,16 @@ class LabelsController < AuthenticatorController
   def update
     @label.assign_attributes(label_parameter)
     facade = build_facade.insert @label
+
+    if facade.status_green?
+      render json: to_data(data: @label)
+    else
+      render json: to_data(errors: facade.errors), status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    facade = build_facade.delete @label
 
     if facade.status_green?
       render json: to_data(data: @label)

@@ -27,13 +27,17 @@ class Label < ApplicationRecord
   attr_accessor :selected
 
   belongs_to :account_user
-  has_many :associated_labels
+  has_many :associated_labels, dependent: :delete_all
   alias_attribute :au, :account_user
 
   rules_of_insert Strategy::Labels::CheckApp,
                   Strategy::Labels::SetName,
                   Strategy::Labels::CheckExits,
                   Strategy::Shares::SaveModel
+
+  rules_of_select Strategy::Labels::Filter
+
+  rules_of_delete Strategy::Shares::DestroyModel
 
   rules_of :set_resources,
            Strategy::Labels::CheckAppToResources,
