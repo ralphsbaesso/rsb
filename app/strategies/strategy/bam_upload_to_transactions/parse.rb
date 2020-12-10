@@ -13,9 +13,9 @@ class Strategy::BAMUploadToTransactions::Parse < Strategy
         field = field.to_sym
         value = cells[index].strip
 
-        if field == :transaction_date
+        if field == :transacted_at
           hash[field] = Util::Parser.to_datetime value
-        elsif field == :pay_date
+        elsif field == :paid_at
           hash[field] = Util::Parser.to_datetime value
         elsif field == :description
           hash[field] = "[#{value}]"
@@ -39,7 +39,7 @@ class Strategy::BAMUploadToTransactions::Parse < Strategy
         next
       end
 
-      hash[:pay_date] = model.pay_date if account.type&.to_sym == :credit_card
+      hash[:paid_at] = model.paid_at if account.type&.to_sym == :credit_card
       list << hash if hash.present?
     end
 

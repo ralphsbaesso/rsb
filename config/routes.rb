@@ -10,7 +10,10 @@ Rails.application.routes.draw do
     end
     resources :categories, only: %i[index create update destroy show]
     resources :items
-    resources :transactions
+    resources :transactions, only: [:index, :show, :create, :destroy, :update] do
+      post :upload, on: :member
+      delete :remove_file, on: :member
+    end
     resources :upload_to_transactions
   end
 

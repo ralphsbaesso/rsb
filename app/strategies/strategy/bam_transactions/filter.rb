@@ -16,7 +16,7 @@ class Strategy::BAMTransactions::Filter < Strategy
     query = query.where(bam_account_id: filter[:bam_account_id]) if filter[:bam_account_id].present?
 
     # by data
-    type_date = %w[created_at transaction_date pay_date].include?(filter[:type_date]) ? filter[:type_date] : :updated_at
+    type_date = %w[created_at transacted_at paid_at].include?(filter[:type_date]) ? filter[:type_date] : :updated_at
     start_date = filter[:start_date]
     end_date = filter[:end_date]
     if start_date && end_date

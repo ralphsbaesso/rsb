@@ -4,19 +4,19 @@ class Strategy::BAMUploadToTransactions::CheckType < Strategy
     account = model.bam_account
     return unless account.type
 
-    if account.type.to_sym == :credit_card && model.pay_date.nil?
+    if account.type.to_sym == :credit_card && model.paid_at.nil?
       add_error 'A conta tipo "Crédito" deve informar a data de pagamento.'
       set_status :red
       return
     end
 
-    pay_date = model.pay_date
+    paid_at = model.paid_at
     date =
-      if pay_date.is_a? Date
-        pay_date
+      if paid_at.is_a? Date
+        paid_at
       else
         begin
-          pay_date.to_date
+          paid_at.to_date
         rescue StandardError
           nil
         end

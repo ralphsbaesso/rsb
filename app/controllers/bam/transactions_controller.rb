@@ -1,13 +1,12 @@
 class BAM::TransactionsController < AuthenticatorController
-  before_action :set_transaction, only: [:show, :update, :destroy]
+  before_action :set_transaction, only: [:show, :update, :destroy, :upload, :remove_file]
 
   def index
-    associations = %i[labels bam_item bam_category bam_account]
     facade = build_facade.select BAM::Transaction, filter: params_to_hash
 
     if facade.status_green?
       render json: to_data(resource: facade.data) { |resource|
-        resource.includes(associations) .as_json(include: associations)
+        resource.includes(associations).as_json(include: associations, methods: :files)
       }
     else
       render json: to_data(errors: facade.errors), status: :unprocessable_entity
@@ -26,8 +25,25 @@ class BAM::TransactionsController < AuthenticatorController
     end
   end
 
+  def upload
+    files = params.dig(:transaction, :files)
+    if files.present?
+      @transaction.attaches.attach(files)
+      @transaction.save
+    end
+    render json: to_data(data: @transaction.as_json(methods: :files))
+  end
+
+  def remove_file
+    index = params[:index].to_i
+    @transaction.attaches[index].purge
+    @transaction.reload
+    render json: to_data(data: @transaction.as_json(methods: :files))
+  end
+
   def show
-    render json: to_data(data: @transaction)
+    json = @transaction.as_json(method: :files, include: associations)
+    render json: to_data(data: json)
   end
 
   def destroy
@@ -59,10 +75,11 @@ class BAM::TransactionsController < AuthenticatorController
                      amount
                      description
                      origin
-                     pay_date
+                     paid_at
                      price
                      status
-                     transaction_date
+                     annotation
+                     transacted_at
                      bam_account_id
                      bam_item_id
                      bam_category_id])
@@ -70,5 +87,9 @@ class BAM::TransactionsController < AuthenticatorController
 
   def set_transaction
     @transaction = BAM::Transaction.find params[:id]
+  end
+
+  def associations
+    %i[labels bam_item bam_category bam_account]
   end
 end

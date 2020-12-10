@@ -2,20 +2,21 @@
 #
 # Table name: bam_transactions
 #
-#  id               :bigint           not null, primary key
-#  amount           :float            default(0.0)
-#  description      :string
-#  origin           :string
-#  pay_date         :date
-#  price_cents      :integer          default(0)
-#  status           :string
-#  transaction_date :date
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  account_user_id  :bigint
-#  bam_account_id   :bigint
-#  bam_category_id  :bigint
-#  bam_item_id      :bigint
+#  id              :bigint           not null, primary key
+#  amount          :float            default(0.0)
+#  annotation      :text
+#  description     :string
+#  origin          :string
+#  paid_at         :date
+#  price_cents     :integer          default(0)
+#  status          :string
+#  transacted_at   :date
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  account_user_id :bigint
+#  bam_account_id  :bigint
+#  bam_category_id :bigint
+#  bam_item_id     :bigint
 #
 # Indexes
 #
@@ -48,14 +49,14 @@ RSpec.describe BAM::Transaction, type: :model do
       transaction = BAM::Transaction.new(
         au: au,
         bam_account: bam_account,
-        transaction_date: Date.today
+        transacted_at: Date.today
       )
 
       expect do
         facade = Facade.new(account_user: au)
         facade.insert(transaction)
         expect(facade.status_green?).to be_truthy
-        expect(transaction.transaction_date).to eq(transaction.pay_date)
+        expect(transaction.transacted_at).to eq(transaction.paid_at)
       end.to change(BAM::Transaction, :count).by(1)
     end
 
@@ -65,7 +66,7 @@ RSpec.describe BAM::Transaction, type: :model do
       transaction = BAM::Transaction.new(
         au: au,
         bam_account: bam_account,
-        transaction_date: Date.today,
+        transacted_at: Date.today,
         item: item
       )
 
@@ -73,7 +74,7 @@ RSpec.describe BAM::Transaction, type: :model do
         facade = Facade.new(account_user: au)
         facade.insert(transaction)
         expect(facade.status_green?).to be_truthy
-        expect(transaction.transaction_date).to eq(transaction.pay_date)
+        expect(transaction.transacted_at).to eq(transaction.paid_at)
         expect(transaction.bam_item_id).to eq(item.id)
       end.to change(BAM::Transaction, :count).by(1)
     end

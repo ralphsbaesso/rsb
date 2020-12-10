@@ -10,10 +10,10 @@ class Strategy::BAMUploadToTransactions::BuildTransactions < Strategy
       transaction = BAM::Transaction.new(
         bam_account: bam_account,
         account_user: account_user,
-        transaction_date: hash[:transaction_date],
+        transacted_at: hash[:transacted_at],
         price_cents: hash[:price_cents],
         description: hash[:description],
-        pay_date: hash[:pay_date]
+        paid_at: hash[:paid_at]
       )
 
       facade = Facade.new(account_user: account_user)

@@ -44,11 +44,11 @@ class BAM::Account < ApplicationRecord
 
   FIELDS = [
     {
-      field: :transaction_date,
+      field: :transacted_at,
       description: 'Campo data transação',
     },
     {
-      field: :pay_date,
+      field: :paid_at,
       description: 'Campo data pagamento',
     },
     {

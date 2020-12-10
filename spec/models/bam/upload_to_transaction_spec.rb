@@ -15,7 +15,7 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
 
     context 'account itau_cc' do
       it 'save 35 transaction' do
-        bam_account.fields = %w[transaction_date description value]
+        bam_account.fields = %w[transacted_at description value]
         bam_account.save
 
         path = File.join(Rails.root, 'spec', 'files', 'bam', 'extrato_mar2019.txt')
@@ -38,18 +38,18 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
       end
 
       it 'save 33 transaction' do
-        bam_account.fields = %w[transaction_date description value]
+        bam_account.fields = %w[transacted_at description value]
         bam_account.save
 
         create(:bam_transaction,
-               transaction_date: Date.parse('2019-03-29'),
+               transacted_at: Date.parse('2019-03-29'),
                description: '[RSHOP-SHIBATA H 0-29/03]',
                price_cents: -14_202,
                bam_account: bam_account,
                account_user: au)
 
         create(:bam_transaction,
-               transaction_date: Date.parse('2019-03-29'),
+               transacted_at: Date.parse('2019-03-29'),
                description: '[RSHOP-ASSAI ATACA-29/03]',
                price_cents: -139_21,
                bam_account: bam_account,
@@ -68,13 +68,13 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
     context 'account "cartão de crédito santander"' do
 
       it 'save 18 transaction' do
-        bam_account.fields = %w[transaction_date description ignore reverse_value]
+        bam_account.fields = %w[transacted_at description ignore reverse_value]
         bam_account.type = :credit_card
         bam_account.save
 
         date = Date.new
         path = File.join(Rails.root, 'spec', 'files', 'bam', 'cartao_de_credito_santander.csv')
-        upload = BAM::UploadToTransaction.new(bam_account: bam_account, file: path, pay_date: date)
+        upload = BAM::UploadToTransaction.new(bam_account: bam_account, file: path, paid_at: date)
 
         facade = Facade.new(account_user: au)
         facade.insert(upload)
@@ -83,23 +83,23 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
         transaction = bam_account.bam_transactions.last
         expect(transaction.price_cents).to eq(-4768)
         expect(transaction.price.format).to eq('R$ -47,68')
-        expect(transaction.transaction_date).to eq(Date.new(2019, 3, 28))
-        expect(transaction.pay_date).to eq(date)
+        expect(transaction.transacted_at).to eq(Date.new(2019, 3, 28))
+        expect(transaction.paid_at).to eq(date)
       end
 
       it 'save 16 transaction' do
-        bam_account.fields = %w[transaction_date description ignore reverse_value]
+        bam_account.fields = %w[transacted_at description ignore reverse_value]
         bam_account.type = :credit_card
         bam_account.save
 
         create(:bam_transaction,
-               transaction_date: Date.new(2018, 11, 23),
+               transacted_at: Date.new(2018, 11, 23),
                description: '[LOJAS AMERICANAS MOG(05/08)]',
                price_cents: -1817,
                bam_account: bam_account,
                account_user: au)
         create(:bam_transaction,
-               transaction_date: Date.new(2019, 3, 20),
+               transacted_at: Date.new(2019, 3, 20),
                description: '[PERNAMBUCANAS]',
                price_cents: -4996,
                bam_account: bam_account,
@@ -107,7 +107,7 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
 
         date = Date.new
         path = File.join(Rails.root, 'spec', 'files', 'bam', 'cartao_de_credito_santander.csv')
-        upload = BAM::UploadToTransaction.new(bam_account: bam_account, file: path, pay_date: date)
+        upload = BAM::UploadToTransaction.new(bam_account: bam_account, file: path, paid_at: date)
 
         expect do
           facade = Facade.new(account_user: au)
@@ -120,7 +120,7 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
     context 'date_description_value' do
 
       it 'save 35 transaction' do
-        bam_account.fields = %w[transaction_date description value]
+        bam_account.fields = %w[transacted_at description value]
         bam_account.save
 
         path = File.join(
@@ -134,17 +134,17 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
       end
 
       it 'save 33 transaction' do
-        bam_account.fields = %w[transaction_date description value]
+        bam_account.fields = %w[transacted_at description value]
         bam_account.save
 
         create(:bam_transaction,
-               transaction_date: Date.parse('2019-04-22'),
+               transacted_at: Date.parse('2019-04-22'),
                description: '[COMPRA CARTAO - COMPRA no estabelecimento DEIA MELO REST E PIZZA M]',
                price_cents: -24_00,
                bam_account: bam_account,
                account_user: au)
         create(:bam_transaction,
-               transaction_date: Date.parse('2019-05-03'),
+               transacted_at: Date.parse('2019-05-03'),
                description: '[COMPRA CARTAO - COMPRA no estabelecimento SHIBATA H 02           M]',
                price_cents: -126_72,
                bam_account: bam_account,
@@ -179,7 +179,7 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
 
     context 'ignore_date_doc_description_value_symbol' do
       it 'save 4 transaction' do
-        bam_account.fields = %w[ignore transaction_date ignore description value symbol]
+        bam_account.fields = %w[ignore transacted_at ignore description value symbol]
         bam_account.save
 
         path = File.join(

@@ -4,10 +4,10 @@ FactoryBot.define do
     amount { 0 }
     description { 'MyString' }
     origin { 'MyString' }
-    pay_date { Faker::Date.backward }
+    paid_at { Faker::Date.backward }
     price_cents { Faker::Number.number(digits: 5) }
     status { 'MyString' }
-    transaction_date { Faker::Date.backward }
+    transacted_at { Faker::Date.backward }
     account_user { nil }
     bam_account { nil }
     bam_item { nil }

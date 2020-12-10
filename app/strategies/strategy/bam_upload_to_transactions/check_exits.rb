@@ -5,12 +5,12 @@ class Strategy::BAMUploadToTransactions::CheckExits < Strategy
     list = bucket[:list]
 
     list.each do |hash|
-      transaction_date = hash[:transaction_date]
+      transacted_at = hash[:transacted_at]
       description = hash[:description]
       price_cents = hash[:price_cents]
 
       match = bam_account.bam_transactions.where(
-        transaction_date: transaction_date,
+        transacted_at: transacted_at,
         price_cents: price_cents
       ).where('description LIKE ?', "%#{description}%").limit(1).to_a.first
 

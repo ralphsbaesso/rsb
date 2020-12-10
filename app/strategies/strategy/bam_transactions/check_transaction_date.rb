@@ -2,9 +2,9 @@ class Strategy::BAMTransactions::CheckTransactionDate < Strategy
 
   def process
     transaction = model
-    date = transaction.transaction_date
+    date = transaction.transacted_at
 
-    transaction.transaction_date =
+    transaction.transacted_at =
       begin
         if date.is_a?(DateTime)
           date
@@ -15,7 +15,7 @@ class Strategy::BAMTransactions::CheckTransactionDate < Strategy
         nil
       end
 
-    unless transaction.transaction_date
+    unless transaction.transacted_at
       add_error 'Data da transação inválida.'
       set_status :yellow
     end

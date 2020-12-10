@@ -2,20 +2,21 @@
 #
 # Table name: bam_transactions
 #
-#  id               :bigint           not null, primary key
-#  amount           :float            default(0.0)
-#  description      :string
-#  origin           :string
-#  pay_date         :date
-#  price_cents      :integer          default(0)
-#  status           :string
-#  transaction_date :date
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  account_user_id  :bigint
-#  bam_account_id   :bigint
-#  bam_category_id  :bigint
-#  bam_item_id      :bigint
+#  id              :bigint           not null, primary key
+#  amount          :float            default(0.0)
+#  annotation      :text
+#  description     :string
+#  origin          :string
+#  paid_at         :date
+#  price_cents     :integer          default(0)
+#  status          :string
+#  transacted_at   :date
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  account_user_id :bigint
+#  bam_account_id  :bigint
+#  bam_category_id :bigint
+#  bam_item_id     :bigint
 #
 # Indexes
 #
@@ -40,10 +41,12 @@ class BAM::Transaction < ApplicationRecord
 
   belongs_to :bam_account, class_name: 'BAM::Account'
 
+  has_many_attached :attaches
+
   alias_attribute :au, :account_user
   alias_attribute :item, :bam_item
   alias_attribute :category, :bam_category
-  monetize :price_cents
+  monetize :price_cents, disable_validation: true
 
   rules_of_insert Strategy::BAMTransactions::CheckTransactionDate,
                   Strategy::BAMTransactions::CheckPayDate,
@@ -63,6 +66,17 @@ class BAM::Transaction < ApplicationRecord
     j = super
     j['price'] = price.to_s
     j
+  end
+
+  def files
+    attaches.map do |file|
+      {
+        filename: file.filename,
+        byte_size: file.byte_size,
+        content_type: file.content_type,
+        url: public_url(file)
+      }
+    end
   end
 
 end
