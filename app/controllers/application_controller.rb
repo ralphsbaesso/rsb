@@ -20,27 +20,15 @@ class ApplicationController < ActionController::API
     Facade.new(account_user: @current_account_user)
   end
 
-  def to_data(resource: nil, data: {}, errors: [], meta: {}, fields: false, **args)
+  def to_data(resource: nil, data: {}, errors: [], meta: {}, without_meta: nil, **options)
 
-    unless resource.nil?
-      _resource = resource.page(page).per(per_page)
-      if fields
-        data = _resource.fields(*fields)
-      else
-        data = block_given? ? yield(_resource) : _resource
-      end
-      meta.merge!({
-                    total_count: _resource.total_count,
-                    count: _resource.count,
-                    total_pages: _resource.total_pages,
-                    current_page: _resource.current_page,
-                    prev_page: _resource.prev_page,
-                    next_page: _resource.next_page,
-                    per_page: per_page
-                  })
+    if resource
+      resource = resource.page(page).per(per_page) if without_meta.nil?
+      data = block_given? ? yield(resource) : resource
+      meta.merge!(build_meta(resource)) if without_meta.nil?
     end
 
-    { data: data, errors: errors, meta: meta }.merge(args)
+    { data: data, errors: errors, meta: meta }
   end
 
   def error_occurred(exception)
@@ -67,6 +55,18 @@ class ApplicationController < ActionController::API
 
   def per_page
     @total_per_page = params[:per_page] || 10
+  end
+
+  def build_meta(resource)
+    {
+      total_count: resource.total_count,
+      count: resource.count,
+      total_pages: resource.total_pages,
+      current_page: resource.current_page,
+      prev_page: resource.prev_page,
+      next_page: resource.next_page,
+      per_page: per_page
+    }
   end
 
 end

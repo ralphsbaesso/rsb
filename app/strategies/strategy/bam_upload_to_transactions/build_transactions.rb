@@ -21,9 +21,9 @@ class Strategy::BAMUploadToTransactions::BuildTransactions < Strategy
       messages += facade.errors unless facade.status_green?
     end
 
-    if messages.present?
-      add_error messages
-      set_status :yellow
-    end
+    # if messages.present?
+    #   add_error messages
+    #   set_status :yellow
+    # end
   end
 end

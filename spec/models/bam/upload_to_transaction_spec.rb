@@ -200,6 +200,16 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
       end
     end
 
+    it "don't process with invalid attributes" do
+      path = Faker::Lorem.paragraph
+      upload = BAM::UploadToTransaction.new(bam_account: 'bam_account', file: path)
+
+      facade = Facade.new(account_user: au)
+      facade.insert(upload)
+      expect(facade.status_green?).to be_falsey
+      expect(facade.errors.count).to eq(2)
+    end
+
   end
 
 end

@@ -60,11 +60,14 @@ class BAM::Transaction < ApplicationRecord
 
   rules_of_delete Strategy::Shares::DestroyModel
 
-  rules_of_select Strategy::BAMTransactions::Filter
+  rules_of_select Strategy::BAMTransactions::Filter,
+                  Strategy::Shares::SelectSql,
+                  Strategy::Shares::OrderBy
+                  # Strategy::BAMTransactions::Analytic
 
   def as_json(options = nil)
     j = super
-    j['price'] = price.to_s
+    j['price'] = price.to_f
     j
   end
 

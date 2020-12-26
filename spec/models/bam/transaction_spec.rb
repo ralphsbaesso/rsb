@@ -172,5 +172,64 @@ RSpec.describe BAM::Transaction, type: :model do
       expect(facade.data.count).to eq(2)
     end
 
+    it 'return all, but with select fields' do
+      size = [5, 7, 8].sample
+      size.times do
+        create(:bam_transaction, au: au, bam_account: bam_account)
+      end
+
+      facade = Facade.new(account_user: au)
+      facade.select BAM::Transaction, filter: { fields: :id }
+      expect(facade.data.count).to eq(size)
+
+      object = facade.data.first
+      expect(object.attributes.count).to eq(1)
+
+      facade = Facade.new(account_user: au)
+      facade.select BAM::Transaction, filter: { fields: %i[id status price_cents] }
+      expect(facade.data.count(:all)).to eq(size)
+
+      object = facade.data.first
+      expect(object.attributes.count).to eq(3)
+    end
+
+    context 'to analytic' do
+
+      xit do
+        bam_transaction = create(:bam_transaction, au: au, bam_account: bam_account, price_cents: 100)
+        value = bam_transaction.price_cents
+        value1 = 0
+        value2 = 0
+
+        bam_account1 = create(:bam_account, au: au)
+        2.times do |index|
+          transaction = create(:bam_transaction, au: au, bam_account: bam_account1, price_cents: (index + 1) * 200)
+          value1 += transaction.price_cents
+        end
+
+        bam_account2 = create(:bam_account, au: au)
+        3.times do |index|
+          transaction = create(:bam_transaction, au: au, bam_account: bam_account2, price_cents: (index + 1) * 300)
+          value2 += transaction.price_cents
+        end
+
+        facade = Facade.new(account_user: au)
+        facade.show_steps = true
+        facade.select BAM::Transaction, analytic: :group, fields: :bam_item_id
+
+        pp facade.errors
+        expect(facade.status_green?).to be_truthy
+        puts :result
+        pp facade.data
+
+        pp BAM::Transaction.pluck(:price_cents)
+
+        expect(facade.data.count).to eq(3)
+        expect(facade.data[bam_account.id]).to eq(value)
+        expect(facade.data[bam_account1.id]).to eq(value1)
+        expect(facade.data[bam_account2.id]).to eq(value2)
+      end
+    end
+
   end
 end

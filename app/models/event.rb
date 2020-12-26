@@ -34,6 +34,7 @@ class Event < ApplicationRecord
 
   def self.add(message:, app:, account_user: nil, type: nil, action: nil, important: nil, **details)
     account_user = account_user.is_a?(AccountUser) ? account_user : AccountUser.find_by(id: account_user) if account_user
+
     user_email = details[:user_mail] || account_user&.user&.email
     action = %i[insert delete update list].include?(action) ? action : :any
 
@@ -45,8 +46,9 @@ class Event < ApplicationRecord
       event_type: type,
       action: action,
       important: important.present?,
-      details: details.as_json
+      details: details
     )
+
   rescue StandardError => e
     e
   end

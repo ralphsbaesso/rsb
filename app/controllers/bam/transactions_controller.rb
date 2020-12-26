@@ -5,7 +5,7 @@ class BAM::TransactionsController < AuthenticatorController
     facade = build_facade.select BAM::Transaction, filter: params_to_hash
 
     if facade.status_green?
-      render json: to_data(resource: facade.data) { |resource|
+      render json: to_data(resource: facade.data, **params_to_hash) { |resource|
         resource.includes(associations).as_json(include: associations, methods: :files)
       }
     else
