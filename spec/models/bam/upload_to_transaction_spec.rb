@@ -161,18 +161,19 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
         end.to change(bam_account.bam_transactions, :count).by(30)
       end
 
-      xit 'must save one and ignore two transactions' do
-        account.ignore_descriptions = "ignorar\n ; SALDO ANTERIOR\n"
-        bs = create(:bank_statement, accountant: accountant, account: account)
-        path = File.join(Rails.root, 'spec', 'files', 'date_description_value2.csv')
-        bs.last_extract.attach(io: File.open(path), filename: 'test')
+      it 'must handler accents and invalid lines' do
+        bam_account.fields = %w[transacted_at description value]
+        bam_account.save
+
+        path = File.join(
+          Rails.root, 'spec', 'files', 'bam', 'date_description_value2.csv'
+        )
+        upload = BAM::UploadToTransaction.new(bam_account: bam_account, file: path)
 
         facade = Facade.new(account_user: au)
-        facade.insert(bs)
-
-        expect(bs.transactions.count).to eq(3)
-        expect(bs.transactions.sample).to a_kind_of(Transaction)
-        expect(bs.transactions.delete_if {|t| t.ignore? }.count).to eq(1)
+        facade.insert(upload)
+        expect(facade.status_green?).to be_truthy
+        expect(bam_account.bam_transactions.count).to eq(85)
       end
 
     end
@@ -197,6 +198,35 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
         expect(transactions[1].price_cents).to eq(- 25_00)
         expect(transactions[2].price_cents).to eq(700_00)
         expect(transactions[3].price_cents).to eq(- 677_92)
+      end
+    end
+
+    context 'credit card' do
+      context 'transacted_at description annotation reverse_value' do
+
+        it 'save 18 transaction' do
+          bam_account.fields = %w[transacted_at description annotation reverse_value]
+          bam_account.type = :credit_card
+          bam_account.save
+
+          date = Date.new
+          path = File.join(Rails.root, 'spec', 'files', 'bam',
+                           'transacted_at_description_annotation_reverse_value.csv')
+          upload = BAM::UploadToTransaction.new(bam_account: bam_account, file: path, paid_at: date)
+
+          facade = Facade.new(account_user: au)
+          facade.insert(upload)
+          expect(bam_account.bam_transactions.count).to eq(19)
+
+          transaction = bam_account.bam_transactions.last
+          expect(transaction.price_cents).to eq(-2240)
+          expect(transaction.price.format).to eq('R$ -22,40')
+          expect(transaction.transacted_at).to eq(Date.new(2020, 11, 30))
+          expect(transaction.paid_at).to eq(date)
+          expect(transaction.origin).to eq('upload')
+          expect(transaction.annotation).to eq('<p>Compra à vista</p>')
+        end
+
       end
     end
 

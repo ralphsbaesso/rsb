@@ -5,7 +5,7 @@ class BAM::ItemsController < AuthenticatorController
     facade = build_facade.select BAM::Item
 
     if facade.status_green?
-      render json: to_data(resource: facade.data)
+      render json: to_data(resource: facade.data, **params_to_hash)
     else
       render json: to_data(errors: facade.errors), status: :unprocessable_entity
     end

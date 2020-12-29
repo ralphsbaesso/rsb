@@ -27,7 +27,7 @@ class AccountUser < ApplicationRecord
   has_many :bam_items, class_name: 'BAM::Item'
 
   has_many :bam_categories, class_name: 'BAM::Category'
-  has_many :bam_accounts, class_name: 'BAM::Account'
+  has_many :bam_accounts, class_name: 'BAM::Account', dependent: :destroy
   has_many :bam_transactions, class_name: 'BAM::Transaction'
 
   has_many :labels

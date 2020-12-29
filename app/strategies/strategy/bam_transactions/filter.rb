@@ -2,7 +2,7 @@ class Strategy::BAMTransactions::Filter < Strategy
 
   def process
     filter = bucket[:filter] || {}
-    query = current_account_user.bam_transactions
+    query = current_account_user.bam_transactions.where(ignore: false)
 
     # by label
     query = query.joins(:labels).where(labels: { id: filter[:label_id] }) if filter[:label_id].present?
@@ -22,9 +22,9 @@ class Strategy::BAMTransactions::Filter < Strategy
     if start_date && end_date
       query = query.where(type_date => (start_date..end_date))
     elsif start_date
-      query = query.where('? > ?', type_date, start_date)
+      query = query.where("#{type_date} > ?", start_date)
     elsif end_date
-      query = query.where('? < ?', type_date, end_date)
+      query = query.where("#{type_date} < ?", end_date)
     end
 
     self.data = query

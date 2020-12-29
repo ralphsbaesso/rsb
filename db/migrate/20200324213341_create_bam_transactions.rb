@@ -12,6 +12,8 @@ class CreateBAMTransactions < ActiveRecord::Migration[5.2]
       t.date :transacted_at
       t.date :paid_at
 
+      t.boolean :ignore, :boolean, default: false
+
       t.references :bam_item
       t.references :bam_category
       t.references :bam_account, foreign_key: true

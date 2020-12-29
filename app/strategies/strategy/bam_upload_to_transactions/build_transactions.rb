@@ -13,7 +13,9 @@ class Strategy::BAMUploadToTransactions::BuildTransactions < Strategy
         transacted_at: hash[:transacted_at],
         price_cents: hash[:price_cents],
         description: hash[:description],
-        paid_at: hash[:paid_at]
+        annotation: hash[:annotation],
+        paid_at: hash[:paid_at],
+        origin: :upload
       )
 
       facade = Facade.new(account_user: account_user)

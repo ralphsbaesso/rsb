@@ -4,7 +4,7 @@ class Strategy::BAMUploadToTransactions::CheckType < Strategy
     account = model.bam_account
     return unless account.type
 
-    if account.type.to_sym == :credit_card && model.paid_at.nil?
+    if account.type.to_sym == :credit_card && !model.paid_at.present?
       add_error 'A conta tipo "Crédito" deve informar a data de pagamento.'
       set_status :red
       return

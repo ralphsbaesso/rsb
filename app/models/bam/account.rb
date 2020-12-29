@@ -41,7 +41,11 @@ class BAM::Account < ApplicationRecord
 
   rules_of_select Strategy::BAMAccounts::Filter
 
-
+  def as_json(options = nil)
+    j = super
+    j[:type] = type
+    j
+  end
   FIELDS = [
     {
       field: :transacted_at,
@@ -66,6 +70,10 @@ class BAM::Account < ApplicationRecord
     {
       field: :description,
       description: 'Campo descrição'
+    },
+    {
+      field: :annotation,
+      description: 'Campo extra para anotações'
     },
     {
       field: :symbol_of_value,

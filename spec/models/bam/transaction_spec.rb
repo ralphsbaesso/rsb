@@ -6,6 +6,7 @@
 #  amount          :float            default(0.0)
 #  annotation      :text
 #  description     :string
+#  ignore          :boolean          default(FALSE)
 #  origin          :string
 #  paid_at         :date
 #  price_cents     :integer          default(0)

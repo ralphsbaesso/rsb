@@ -7,7 +7,13 @@ class Strategy::BAMUploadToTransactions::Parse < Strategy
 
     list = []
     File.readlines(file).each do |line|
-      cells = line.split ';'
+      cells =
+        begin
+          line.split ';'
+        rescue StandardError
+          line.encode('UTF-8', 'Windows-1252').split ';'
+        end
+
       hash = {}
       fields.each_with_index do |field, index|
         field = field.to_sym
@@ -19,6 +25,8 @@ class Strategy::BAMUploadToTransactions::Parse < Strategy
           hash[field] = Util::Parser.to_datetime value
         elsif field == :description
           hash[field] = "[#{value}]"
+        elsif field == :annotation
+          hash[field] = "<p>#{value}</p>"
         elsif field == :value
           hash[:price_cents] = Util::Parser.to_cents(value)
         elsif field == :reverse_value

@@ -2,11 +2,14 @@ class BAM::TransactionsController < AuthenticatorController
   before_action :set_transaction, only: [:show, :update, :destroy, :upload, :remove_file]
 
   def index
+    option_json = { include: associations }
+    option_json[:method] = :files unless params_to_hash[:without_meta]
+
     facade = build_facade.select BAM::Transaction, filter: params_to_hash
 
     if facade.status_green?
       render json: to_data(resource: facade.data, **params_to_hash) { |resource|
-        resource.includes(associations).as_json(include: associations, methods: :files)
+        resource.includes(associations).as_json(option_json)
       }
     else
       render json: to_data(errors: facade.errors), status: :unprocessable_entity

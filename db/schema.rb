@@ -102,6 +102,8 @@ ActiveRecord::Schema.define(version: 2020_11_21_140133) do
     t.text "annotation"
     t.date "transacted_at"
     t.date "paid_at"
+    t.boolean "ignore", default: false
+    t.boolean "boolean", default: false
     t.bigint "bam_item_id"
     t.bigint "bam_category_id"
     t.bigint "bam_account_id"

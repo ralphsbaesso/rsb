@@ -54,7 +54,7 @@ class BAM::AccountsController < AuthenticatorController
   private
 
   def account_parameter
-    params.require(:account).permit(:name, :description, fields: [])
+    params.require(:account).permit(:name, :description, :type, fields: [])
   end
 
   def set_account

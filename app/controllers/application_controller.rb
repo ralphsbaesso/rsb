@@ -46,7 +46,7 @@ class ApplicationController < ActionController::API
 
 
   def params_to_hash
-    params.permit!.to_h.deep_symbolize_keys
+    @params_to_hash ||= params.permit!.to_h.deep_symbolize_keys
   end
 
   def page
