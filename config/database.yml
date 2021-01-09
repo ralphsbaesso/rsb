@@ -68,6 +68,4 @@ test:
 #
 production:
   <<: *default
-  database: rsb_production
-  username: rsb
-  password: <%= ENV['RSB_DATABASE_PASSWORD'] %>
+  database: rsb

@@ -5,6 +5,7 @@
 #  id              :bigint           not null, primary key
 #  amount          :float            default(0.0)
 #  annotation      :text
+#  boolean         :boolean          default(FALSE)
 #  description     :string
 #  ignore          :boolean          default(FALSE)
 #  origin          :string
