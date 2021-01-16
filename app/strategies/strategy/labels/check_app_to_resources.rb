@@ -1,7 +1,7 @@
 class Strategy::Labels::CheckAppToResources < Strategy
 
   def process
-    apps = %w[bam book photo]
+    apps = %w[bam book moment]
     app = bucket[:app].to_s
 
     unless apps.include? app.to_s

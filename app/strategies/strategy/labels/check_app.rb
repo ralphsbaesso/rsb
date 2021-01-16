@@ -1,7 +1,7 @@
 class Strategy::Labels::CheckApp < Strategy
 
   def process
-    apps = %w[bam book photo]
+    apps = %w[bam book moment]
     label = model
 
     unless apps.include? label.app.to_s

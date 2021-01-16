@@ -31,5 +31,6 @@ class AccountUser < ApplicationRecord
   has_many :bam_transactions, class_name: 'BAM::Transaction'
 
   has_many :labels
+  has_many :moment_photos, class_name: 'Moment::Photo'
 
 end

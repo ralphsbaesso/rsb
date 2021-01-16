@@ -46,7 +46,7 @@ RSpec.describe BAM::Transaction, type: :model do
     events(:error)
   end
 
-  context 'Save' do
+  context 'insert' do
     it 'increase one transaction' do
       transaction = BAM::Transaction.new(
         au: au,

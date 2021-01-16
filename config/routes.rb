@@ -17,6 +17,12 @@ Rails.application.routes.draw do
     resources :upload_to_transactions
   end
 
+  namespace :moment do
+    resources :photos do
+
+    end
+  end
+
   namespace :admin do
     resources :events, only: [:index]
   end
