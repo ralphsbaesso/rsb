@@ -39,6 +39,7 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
 
       it 'save 33 transaction' do
         bam_account.fields = %w[transacted_at description value]
+        bam_account.type = ''
         bam_account.save
 
         create(:bam_transaction,
