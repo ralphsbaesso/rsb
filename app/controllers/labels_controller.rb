@@ -2,7 +2,7 @@ class LabelsController < AuthenticatorController
   before_action :set_label, only: [:update, :destroy]
 
   def index
-    facade = build_facade.select :label
+    facade = build_facade.select :label, filter: params_to_hash
 
     if facade.status_green?
       render json: to_data(resource: facade.data)

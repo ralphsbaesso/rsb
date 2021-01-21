@@ -2,10 +2,10 @@ class Moment::PhotosController < AuthenticatorController
   before_action :set_moment_photo, only: [:show, :update, :destroy]
 
   def index
-    facade = build_facade.select 'Moment::Photo'
+    facade = build_facade.select 'Moment::Photo', filter: params_to_hash
 
     if facade.status_green?
-      render json: to_data(resource: facade.data) { |r| r.as_json(includes: :labels, methods: [:archive_base64, :filesize]) }
+      render json: to_data(resource: facade.data) { |r| r.includes(:archive, :labels).as_json(include: :labels, methods: [:archive_base64, :filesize]) }
     else
       render json: to_data(errors: facade.errors), status: :unprocessable_entity
     end

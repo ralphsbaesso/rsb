@@ -33,6 +33,10 @@ class Moment::Photo < ApplicationRecord
                   Strategy::Shares::SaveModel
 
   rules_of_update Strategy::Shares::SaveModel
-  rules_of_select Strategy::MomentPhotos::Filter
+
   rules_of_delete Strategy::Shares::DestroyModel
+
+  rules_of_select Strategy::MomentPhotos::Filter,
+                  Strategy::Shares::SelectSql,
+                  Strategy::Shares::OrderBy
 end

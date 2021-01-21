@@ -12,7 +12,7 @@ class Strategy::MomentPhotos::CheckArchive < Strategy
     end
 
     ext = File.extname(file)
-    unless %w[.jpeg .gif .png .apng .svg .bmp .bmp .ico .png .ico].include?(ext.downcase)
+    unless %w[.jpg .jpeg .gif .png .apng .svg .bmp .bmp .ico .png .ico].include?(ext.downcase)
       add_error 'Extensão inválida.'
       set_status :red
       return
