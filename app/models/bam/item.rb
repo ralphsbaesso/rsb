@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: bam_items
@@ -37,5 +39,4 @@ class BAM::Item < ApplicationRecord
                   Strategy::Shares::DestroyModel
 
   rules_of_select Strategy::BAMItems::Filter
-
 end

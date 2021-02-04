@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module AuthHelper
   def sign_up(user)
     post '/auth/', params: {
-       email: user.email,
-       password: user.password,
-       password_confirmation: user.password_confirmation
+      email: user.email,
+      password: user.password,
+      password_confirmation: user.password_confirmation
     }
     @auth_tokens = response.headers.slice('client', 'access-token', 'uid')
   end

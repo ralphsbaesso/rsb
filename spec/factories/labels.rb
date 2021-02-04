@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: labels
@@ -24,10 +26,10 @@
 
 FactoryBot.define do
   factory :label do
-    name { "MyString" }
-    original_name { "MyString" }
-    color { "MyString" }
-    app { "MyString" }
+    name { 'MyString' }
+    original_name { 'MyString' }
+    color { 'MyString' }
+    app { 'MyString' }
     account_user { nil }
   end
 end

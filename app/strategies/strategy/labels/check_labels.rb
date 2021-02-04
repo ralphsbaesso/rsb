@@ -1,5 +1,6 @@
-class Strategy::Labels::CheckLabels < Strategy
+# frozen_string_literal: true
 
+class Strategy::Labels::CheckLabels < Strategy
   desc 'Verifica se os Labels passado por parametro são válidos'
   def process
     app = bucket[:app]

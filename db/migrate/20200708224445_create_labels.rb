@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateLabels < ActiveRecord::Migration[5.2]
   def change
     create_table :labels do |t|
@@ -11,7 +13,6 @@ class CreateLabels < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_index :labels, [:account_user_id, :app, :name]
+    add_index :labels, %i[account_user_id app name]
   end
 end
-

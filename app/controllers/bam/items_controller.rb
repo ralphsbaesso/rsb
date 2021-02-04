@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class BAM::ItemsController < AuthenticatorController
-  before_action :set_item, only: [:show, :update, :destroy]
+  before_action :set_item, only: %i[show update destroy]
 
   def index
     facade = build_facade.select BAM::Item

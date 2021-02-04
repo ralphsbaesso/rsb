@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class LabelsController < AuthenticatorController
-  before_action :set_label, only: [:update, :destroy]
+  before_action :set_label, only: %i[update destroy]
 
   def index
     facade = build_facade.select :label, filter: params_to_hash
@@ -56,7 +58,6 @@ class LabelsController < AuthenticatorController
     else
       render json: to_data(errors: facade.errors), status: :unprocessable_entity
     end
-
   end
 
   private
@@ -68,5 +69,4 @@ class LabelsController < AuthenticatorController
   def set_label
     @label = current_account_user.labels.find params[:id]
   end
-
 end

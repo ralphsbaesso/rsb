@@ -1,7 +1,7 @@
+# frozen_string_literal: true
+
 class Strategy::BAMTransactions::UpdateTransfer < Strategy
-
   def process
-
     transfer = entity
 
     if status == :green
@@ -15,13 +15,12 @@ class Strategy::BAMTransactions::UpdateTransfer < Strategy
       if destiny_id.present?
         Transaction.destroy destiny_id
       else
-        destiny.save! if destiny
+        destiny&.save!
       end
     end
 
     transfer.save!
 
     true
-
   end
 end

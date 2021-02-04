@@ -1,5 +1,6 @@
-class Strategy::MomentPhotos::Filter < Strategy
+# frozen_string_literal: true
 
+class Strategy::MomentPhotos::Filter < Strategy
   desc 'Filtro para Moment::Photos'
   def process
     filter = bucket[:filter] || {}
@@ -8,7 +9,7 @@ class Strategy::MomentPhotos::Filter < Strategy
     # by label
     query = query.joins(:labels).where(labels: { id: filter[:label_id] }) if filter[:label_id].present?
     # by generic
-    query = query.where('name ILIKE ?', "%#{filter[:generic]}%") if filter[:generic].present?
+    query = query.joins(:archive).where('archives.filename ILIKE ?', "%#{filter[:generic]}%") if filter[:generic].present?
     # by data
     type_date = filter[:type_date] == 'created_at' ? filter[:type_date] : :updated_at
     start_date = filter[:start_date]
@@ -23,5 +24,4 @@ class Strategy::MomentPhotos::Filter < Strategy
 
     self.data = query
   end
-
 end

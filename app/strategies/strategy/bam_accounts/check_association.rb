@@ -1,5 +1,6 @@
-class Strategy::BAMAccounts::CheckAssociation < Strategy
+# frozen_string_literal: true
 
+class Strategy::BAMAccounts::CheckAssociation < Strategy
   def process
     account = model
 
@@ -7,7 +8,6 @@ class Strategy::BAMAccounts::CheckAssociation < Strategy
       add_error 'Existe TRASAÇÕES associada a essa conta!'
       set_status :red
     end
-
   end
 
   def self.my_description

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -36,7 +38,6 @@
 #
 
 FactoryBot.define do
-
   factory :user do
     name { Faker::FunnyName.name }
     email { Faker::Internet.email }

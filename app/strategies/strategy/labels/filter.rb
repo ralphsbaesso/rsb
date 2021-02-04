@@ -1,5 +1,6 @@
-class Strategy::Labels::Filter < Strategy
+# frozen_string_literal: true
 
+class Strategy::Labels::Filter < Strategy
   desc 'Filtro para Label'
   def process
     filter = bucket[:filter] || {}
@@ -8,5 +9,4 @@ class Strategy::Labels::Filter < Strategy
 
     self.data = query
   end
-
 end

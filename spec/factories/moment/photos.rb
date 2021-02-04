@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: moment_photos
@@ -5,7 +7,6 @@
 #  id              :bigint           not null, primary key
 #  description     :string
 #  metadata        :jsonb
-#  name            :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  account_user_id :bigint

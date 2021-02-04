@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 namespace :util do
-
   desc 'Create user to environment develop'
   task create_user: :environment do
     # unless Rails.env.production?
@@ -28,5 +27,4 @@ namespace :util do
     end
     puts :created
   end
-
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: labels
@@ -44,5 +46,4 @@ class Label < ApplicationRecord
            Strategy::Labels::CheckLabels,
            Strategy::Labels::CheckResources,
            Strategy::Labels::UpdateResources
-
 end

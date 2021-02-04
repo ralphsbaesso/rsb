@@ -1,5 +1,6 @@
-class BAM::UploadToTransactionsController < AuthenticatorController
+# frozen_string_literal: true
 
+class BAM::UploadToTransactionsController < AuthenticatorController
   def index
     render json: { data: BAM::Structure.description_options }
   end
@@ -19,15 +20,6 @@ class BAM::UploadToTransactionsController < AuthenticatorController
     else
       render json: to_data(errors: facade.errors), status: :unprocessable_entity
     end
-  end
-
-  def show
-  end
-
-  def destroy
-  end
-
-  def update
   end
 
 end

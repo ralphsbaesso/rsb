@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module HasArchive
   extend ActiveSupport::Concern
 
@@ -17,10 +19,9 @@ module HasArchive
       end
 
     content = file.read
-    self.archive ||= build_archive
-
     archive.content = Base64.encode64(Zlib::Deflate.deflate(content))
     archive.md5 = Digest::MD5.hexdigest(content)
+
     archive.extension = extension || File.extname(file.path)
     archive.filename = filename || File.basename(file.path, archive.extension)
     archive.size = File.size(file)
@@ -37,11 +38,11 @@ module HasArchive
   end
 
   def attach?
-    archive.present?
+    @archive&.content.present?
   end
 
   def save_attach
-    archive&.save
+    @archive&.save
   end
 
   def purge_attach
@@ -49,11 +50,24 @@ module HasArchive
   end
 
   def archive_base64
+    return unless archive
+
     Base64.encode64(Zlib::Inflate.inflate(Base64.decode64(archive.content)))
   end
 
   def filesize
-    archive.size
+    archive&.size
   end
 
+  def full_name
+    archive.full_name
+  end
+
+  def extension
+    archive.extension
+  end
+
+  def archive
+    @archive ||= super || build_archive
+  end
 end

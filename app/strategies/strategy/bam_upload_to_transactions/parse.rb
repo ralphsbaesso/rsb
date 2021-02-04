@@ -1,5 +1,6 @@
-class Strategy::BAMUploadToTransactions::Parse < Strategy
+# frozen_string_literal: true
 
+class Strategy::BAMUploadToTransactions::Parse < Strategy
   def process
     account = model.bam_account
     file = model.file

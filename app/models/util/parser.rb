@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module Util
   class Parser
     class << self
-
       def to_cents(value)
         new_value =
           if value.is_a? Float
@@ -14,7 +15,6 @@ module Util
       end
 
       def to_datetime(date, format = nil)
-
         new_date =
           if date.is_a? DateTime
             date
@@ -26,9 +26,9 @@ module Util
             DateTime.strptime(date, '%Y%m%d')
           elsif date.is_a?(String) && date.length == 8
             DateTime.strptime(date, '%d%m%Y')
-          elsif date.is_a?(String) && date.length == 7 and date.include? '/'
+          elsif date.is_a?(String) && date.length == 7 && date.include?('/')
             DateTime.strptime(date, '%m/%Y')
-          elsif date.is_a?(String) && date.match(/^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/)
+          elsif date.is_a?(String) && date.match(%r{^([0-2][0-9]|(3)[0-1])(/)(((0)[0-9])|((1)[0-2]))(/)\d{4}$})
             DateTime.strptime(date, '%d/%m/%Y')
           else
             date.to_datetime
@@ -38,7 +38,6 @@ module Util
       rescue StandardError
         nil
       end
-
     end
   end
 end

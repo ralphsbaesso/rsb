@@ -1,5 +1,6 @@
-FactoryBot.define do
+# frozen_string_literal: true
 
+FactoryBot.define do
   factory :bam_transaction, class: BAM::Transaction do
     amount { 0 }
     description { 'MyString' }

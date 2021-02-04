@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateEvents < ActiveRecord::Migration[5.2]
   def change
     create_table :events do |t|
@@ -15,8 +17,8 @@ class CreateEvents < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_index :events, [:account_user_id, :app]
-    add_index :events, [:account_user_id, :user_email]
-    add_index :events, [:account_user_id, :important]
+    add_index :events, %i[account_user_id app]
+    add_index :events, %i[account_user_id user_email]
+    add_index :events, %i[account_user_id important]
   end
 end

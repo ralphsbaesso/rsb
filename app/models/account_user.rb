@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: account_users
@@ -32,5 +34,4 @@ class AccountUser < ApplicationRecord
 
   has_many :labels
   has_many :moment_photos, class_name: 'Moment::Photo'
-
 end

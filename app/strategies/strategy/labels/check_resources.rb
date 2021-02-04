@@ -1,5 +1,6 @@
-class Strategy::Labels::CheckResources < Strategy
+# frozen_string_literal: true
 
+class Strategy::Labels::CheckResources < Strategy
   desc 'Verifica os recursos passados por parâmetro se são válidos.'
   def process
     resources = []

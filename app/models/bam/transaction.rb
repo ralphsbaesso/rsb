@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: bam_transactions
@@ -65,7 +67,7 @@ class BAM::Transaction < ApplicationRecord
   rules_of_select Strategy::BAMTransactions::Filter,
                   Strategy::Shares::SelectSql,
                   Strategy::Shares::OrderBy
-                  # Strategy::BAMTransactions::Analytic
+  # Strategy::BAMTransactions::Analytic
 
   def as_json(options = nil)
     j = super
@@ -83,5 +85,4 @@ class BAM::Transaction < ApplicationRecord
       }
     end
   end
-
 end

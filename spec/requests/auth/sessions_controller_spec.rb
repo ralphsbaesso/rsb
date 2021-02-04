@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Auth::SessionsController, type: :request do
-
   context '#create' do
     it 'login' do
       password = 'Abc123'
@@ -19,11 +18,9 @@ RSpec.describe Auth::SessionsController, type: :request do
       user = data['data']
       expect(user['email']).to eq(email)
     end
-
   end
 
   context '#cycle' do
-
     it 'sign_in -> authenticator -> sign_out' do
       user = create(:user)
       login user
@@ -49,6 +46,5 @@ RSpec.describe Auth::SessionsController, type: :request do
       get '/auth/validate_token', headers: @auth_tokens
       expect(response).to have_http_status 401
     end
-
   end
 end

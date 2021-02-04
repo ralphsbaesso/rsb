@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 class BAM::UploadToTransaction
   include RuleBox::Mapper
@@ -17,5 +18,4 @@ class BAM::UploadToTransaction
                   Strategy::BAMUploadToTransactions::Parse,
                   Strategy::BAMUploadToTransactions::CheckExits,
                   Strategy::BAMUploadToTransactions::BuildTransactions
-
 end

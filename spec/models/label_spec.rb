@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: labels
@@ -66,7 +68,6 @@ RSpec.describe Label, type: :model do
     end
 
     context 'set_resources' do
-
       it 'one resource for one label' do
         label = create(:label, au: au, app: :bam)
         labels = [{ id: label.id, selected: true }]
@@ -114,7 +115,7 @@ RSpec.describe Label, type: :model do
         bam_transaction1 = create(:bam_transaction, au: au, bam_account: bam_account)
         klass = BAM::Transaction.to_s
 
-        labels = [label, label1, label2].map { |l| { id: l.id, selected: true}}
+        labels = [label, label1, label2].map { |l| { id: l.id, selected: true } }
         resources = [{ id: bam_transaction.id, klass: klass }, { id: bam_transaction1.id, klass: klass }]
 
         facade = Facade.new(account_user: au)
@@ -140,7 +141,6 @@ RSpec.describe Label, type: :model do
 
         expect(Label.count).to eq(3)
       end
-
     end
   end
 end

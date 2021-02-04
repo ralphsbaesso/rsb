@@ -1,5 +1,6 @@
-class Strategy::Shares::CheckName < Strategy
+# frozen_string_literal: true
 
+class Strategy::Shares::CheckName < Strategy
   desc 'Verifica se já está utilizando este nome'
   def process
     klazz = model.class.name.constantize
@@ -14,7 +15,5 @@ class Strategy::Shares::CheckName < Strategy
       add_error 'Nome já em uso.'
       set_status :red
     end
-
   end
-
 end

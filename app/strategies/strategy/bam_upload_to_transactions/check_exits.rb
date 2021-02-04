@@ -1,5 +1,6 @@
-class Strategy::BAMUploadToTransactions::CheckExits < Strategy
+# frozen_string_literal: true
 
+class Strategy::BAMUploadToTransactions::CheckExits < Strategy
   def process
     bam_account = model.bam_account
     list = bucket[:list]

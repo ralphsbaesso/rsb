@@ -1,5 +1,6 @@
-class Strategy::BAMItems::CheckName < Strategy
+# frozen_string_literal: true
 
+class Strategy::BAMItems::CheckName < Strategy
   def process
     item = model
 
@@ -7,7 +8,6 @@ class Strategy::BAMItems::CheckName < Strategy
       add_message 'Nome já em uso.'
       set_status :red
     end
-
   end
 
   def self.my_description

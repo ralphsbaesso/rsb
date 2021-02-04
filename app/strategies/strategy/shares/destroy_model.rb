@@ -1,5 +1,6 @@
-class Strategy::Shares::DestroyModel < Strategy
+# frozen_string_literal: true
 
+class Strategy::Shares::DestroyModel < Strategy
   def process
     if status == :green
       model.destroy

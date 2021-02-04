@@ -1,5 +1,6 @@
-Rails.application.routes.draw do
+# frozen_string_literal: true
 
+Rails.application.routes.draw do
   resources :labels do
     post :set_resources, on: :collection
   end
@@ -10,7 +11,7 @@ Rails.application.routes.draw do
     end
     resources :categories, only: %i[index create update destroy show]
     resources :items
-    resources :transactions, only: [:index, :show, :create, :destroy, :update] do
+    resources :transactions, only: %i[index show create destroy update] do
       post :upload, on: :member
       delete :remove_file, on: :member
     end
@@ -19,7 +20,6 @@ Rails.application.routes.draw do
 
   namespace :moment do
     resources :photos do
-
     end
   end
 
@@ -31,5 +31,4 @@ Rails.application.routes.draw do
     registrations: 'auth/registrations',
     sessions: 'auth/sessions'
   }
-
 end

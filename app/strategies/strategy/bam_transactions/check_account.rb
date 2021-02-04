@@ -1,5 +1,6 @@
-class Strategy::BAMTransactions::CheckAccount < Strategy
+# frozen_string_literal: true
 
+class Strategy::BAMTransactions::CheckAccount < Strategy
   def process
     return if model.bam_account_id
 

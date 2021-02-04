@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: accounts
@@ -10,7 +12,6 @@
 #
 
 FactoryBot.define do
-
   factory :bam_account, class: BAM::Account do
     name { Faker::FunnyName.name }
     description { Faker::Lorem.paragraph }

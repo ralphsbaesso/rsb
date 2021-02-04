@@ -3,10 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Auth::RegistrationsController, type: :request do
-
   context '#create' do
     it 'must create user' do
-
       email = Faker::Internet.email
       password = 'Abc123'
       password_confirmation = 'Abc123'
@@ -21,6 +19,5 @@ RSpec.describe Auth::RegistrationsController, type: :request do
       expect(user.accounts.count).to eq(1)
       expect(user.account_users.count).to eq(1)
     end
-
   end
 end

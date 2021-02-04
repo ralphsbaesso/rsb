@@ -1,5 +1,6 @@
-class Strategy::Labels::CheckExits < Strategy
+# frozen_string_literal: true
 
+class Strategy::Labels::CheckExits < Strategy
   def process
     label = model
     original_name = label.original_name

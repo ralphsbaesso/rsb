@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 class Moment::PhotosController < AuthenticatorController
-  before_action :set_moment_photo, only: [:show, :update, :destroy]
+  before_action :set_moment_photo, only: %i[show update destroy]
 
   def index
     facade = build_facade.select 'Moment::Photo', filter: params_to_hash
 
     if facade.status_green?
-      render json: to_data(resource: facade.data) { |r| r.includes(:archive, :labels).as_json(include: :labels, methods: [:archive_base64, :filesize]) }
+      render json: to_data(resource: facade.data) { |r| r.includes(:archive, :labels).as_json(include: :labels, methods: %i[name archive_base64 filesize extension]) }
     else
       render json: to_data(errors: facade.errors), status: :unprocessable_entity
     end
@@ -13,7 +15,9 @@ class Moment::PhotosController < AuthenticatorController
 
   def create
     moment_photo = Moment::Photo.new
-    moment_photo.current_archive = params.dig(:moment_photo, :file)&.tempfile
+    file = params.dig(:moment_photo, :file)&.tempfile
+    filename = params.dig(:moment_photo, :file)&.original_filename
+    moment_photo.attach(file, filename: filename)
     moment_photo.au = current_ac
     facade = build_facade.insert moment_photo
 

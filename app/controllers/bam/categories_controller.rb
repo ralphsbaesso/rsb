@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class BAM::CategoriesController < AuthenticatorController
-  before_action :set_category, only: [:show, :update, :destroy]
+  before_action :set_category, only: %i[show update destroy]
 
   def index
     facade = build_facade.select 'BAM::Category'

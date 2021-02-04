@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::API
   include DeviseTokenAuth::Concerns::SetUserByToken
   attr_reader :current_ac, :current_account_user
@@ -15,13 +17,11 @@ class ApplicationController < ActionController::API
     end
   end
 
-
   def build_facade
     Facade.new(account_user: @current_account_user)
   end
 
-  def to_data(resource: nil, data: {}, errors: [], meta: {}, without_meta: nil, **options)
-
+  def to_data(resource: nil, data: {}, errors: [], meta: {}, without_meta: nil, **_options)
     if resource
       resource = resource.page(page).per(per_page) if without_meta.nil?
       data = block_given? ? yield(resource) : resource
@@ -43,7 +43,6 @@ class ApplicationController < ActionController::API
 
     render json: to_data(errors: ['Ops, ocorreu um erro!']), status: :unprocessable_entity
   end
-
 
   def params_to_hash
     @params_to_hash ||= params.permit!.to_h.deep_symbolize_keys
@@ -68,5 +67,4 @@ class ApplicationController < ActionController::API
       per_page: per_page
     }
   end
-
 end

@@ -1,5 +1,6 @@
-class Strategy::Labels::CheckAppToResources < Strategy
+# frozen_string_literal: true
 
+class Strategy::Labels::CheckAppToResources < Strategy
   def process
     apps = %w[bam book moment]
     app = bucket[:app].to_s
@@ -8,6 +9,5 @@ class Strategy::Labels::CheckAppToResources < Strategy
       add_error 'Precisa passar o "App" do recursos.'
       set_status :red
     end
-
   end
 end

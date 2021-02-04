@@ -1,5 +1,6 @@
-class Strategy::BAMCategories::Filter < Strategy
+# frozen_string_literal: true
 
+class Strategy::BAMCategories::Filter < Strategy
   def process
     self.data = current_account_user.bam_categories
   end

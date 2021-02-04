@@ -1,5 +1,6 @@
-class Strategy::BAMTransactions::Filter < Strategy
+# frozen_string_literal: true
 
+class Strategy::BAMTransactions::Filter < Strategy
   def process
     filter = bucket[:filter] || {}
     query = current_account_user.bam_transactions.where(ignore: false)

@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class BAM::AccountsController < AuthenticatorController
-  before_action :set_account, only: [:show, :update, :destroy]
+  before_action :set_account, only: %i[show update destroy]
 
   def index
     facade = build_facade.select 'BAM::Account'

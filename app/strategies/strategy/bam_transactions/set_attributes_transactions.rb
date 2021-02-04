@@ -1,7 +1,7 @@
+# frozen_string_literal: true
+
 class Strategy::BAMTransactions::SetAttributesTransactions < Strategy
-
   def process
-
     transfer = entity
 
     origin_transaction = transfer.origin_transaction
@@ -14,7 +14,7 @@ class Strategy::BAMTransactions::SetAttributesTransactions < Strategy
       end
     end
 
-    if destiny_transaction and bucket[:attributes_destiny].present?
+    if destiny_transaction && bucket[:attributes_destiny].present?
       bucket[:attributes_destiny].each do |key, value|
         destiny_transaction[key] = value if destiny_transaction.has_attribute? key
         destiny_transaction.price = value if key == 'price'

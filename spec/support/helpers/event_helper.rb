@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module EventHelper
-
   def events(type = nil)
     events = type.present? ? Event.where(event_type: type) : Event.all
 

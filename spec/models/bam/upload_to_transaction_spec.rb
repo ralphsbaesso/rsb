@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe BAM::UploadToTransaction, type: :model do
@@ -12,7 +14,6 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
   end
 
   context 'Save' do
-
     context 'account itau_cc' do
       it 'save 35 transaction' do
         bam_account.fields = %w[transacted_at description value]
@@ -67,7 +68,6 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
     end
 
     context 'account "cartão de crédito santander"' do
-
       it 'save 18 transaction' do
         bam_account.fields = %w[transacted_at description ignore reverse_value]
         bam_account.type = :credit_card
@@ -114,12 +114,10 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
           facade = Facade.new(account_user: au)
           facade.insert(upload)
         end.to change(bam_account.bam_transactions, :count).by(16)
-
       end
     end
 
     context 'date_description_value' do
-
       it 'save 35 transaction' do
         bam_account.fields = %w[transacted_at description value]
         bam_account.save
@@ -176,7 +174,6 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
         expect(facade.status_green?).to be_truthy
         expect(bam_account.bam_transactions.count).to eq(85)
       end
-
     end
 
     context 'ignore_date_doc_description_value_symbol' do
@@ -204,7 +201,6 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
 
     context 'credit card' do
       context 'transacted_at description annotation reverse_value' do
-
         it 'save 18 transaction' do
           bam_account.fields = %w[transacted_at description annotation reverse_value]
           bam_account.type = :credit_card
@@ -227,7 +223,6 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
           expect(transaction.origin).to eq('upload')
           expect(transaction.annotation).to eq('<p>Compra à vista</p>')
         end
-
       end
     end
 
@@ -240,7 +235,5 @@ RSpec.describe BAM::UploadToTransaction, type: :model do
       expect(facade.status_green?).to be_falsey
       expect(facade.errors.count).to eq(2)
     end
-
   end
-
 end

@@ -1,5 +1,6 @@
-class Auth::SessionsController < DeviseTokenAuth::SessionsController
+# frozen_string_literal: true
 
+class Auth::SessionsController < DeviseTokenAuth::SessionsController
   # def create
   #   super do |r|
   #     puts 'k'
@@ -8,7 +9,4 @@ class Auth::SessionsController < DeviseTokenAuth::SessionsController
   # end
 
   protected
-
-
-
 end

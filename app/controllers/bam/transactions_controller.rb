@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class BAM::TransactionsController < AuthenticatorController
-  before_action :set_transaction, only: [:show, :update, :destroy, :upload, :remove_file]
+  before_action :set_transaction, only: %i[show update destroy upload remove_file]
 
   def index
     option_json = { include: associations }

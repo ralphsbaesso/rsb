@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateBAMCategories < ActiveRecord::Migration[5.2]
   def change
     create_table :bam_categories do |t|
@@ -9,6 +11,6 @@ class CreateBAMCategories < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_index :bam_categories, [:account_user_id, :name], unique: true
+    add_index :bam_categories, %i[account_user_id name], unique: true
   end
 end

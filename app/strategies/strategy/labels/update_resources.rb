@@ -1,5 +1,6 @@
-class Strategy::Labels::UpdateResources < Strategy
+# frozen_string_literal: true
 
+class Strategy::Labels::UpdateResources < Strategy
   desc 'Atualiza dos recursos com os Labels passados'
   def process
     bucket[:resources].each do |resource|
@@ -12,7 +13,6 @@ class Strategy::Labels::UpdateResources < Strategy
         elsif !label.selected && label_ids.include?(label.id)
           resource.labels.delete(label)
         end
-
       end
     end
   end

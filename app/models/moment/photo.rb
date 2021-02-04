@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: moment_photos
@@ -5,7 +7,6 @@
 #  id              :bigint           not null, primary key
 #  description     :string
 #  metadata        :jsonb
-#  name            :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  account_user_id :bigint
@@ -20,8 +21,6 @@
 #
 
 class Moment::Photo < ApplicationRecord
-  attr_accessor :current_archive
-
   include HasLabels
   include HasArchive
   include RuleBox::Mapper
@@ -30,6 +29,7 @@ class Moment::Photo < ApplicationRecord
   alias_attribute :au, :account_user
 
   rules_of_insert Strategy::MomentPhotos::CheckArchive,
+                  Strategy::MomentPhotos::CheckUnique,
                   Strategy::Shares::SaveModel
 
   rules_of_update Strategy::Shares::SaveModel
@@ -39,4 +39,14 @@ class Moment::Photo < ApplicationRecord
   rules_of_select Strategy::MomentPhotos::Filter,
                   Strategy::Shares::SelectSql,
                   Strategy::Shares::OrderBy
+
+  def name
+    archive.filename
+  end
+
+  def name=(name)
+    archive.filename = name
+  end
+
+  alias filename name
 end

@@ -1,29 +1,20 @@
-class Strategy::MomentPhotos::CheckArchive < Strategy
+# frozen_string_literal: true
 
+class Strategy::MomentPhotos::CheckArchive < Strategy
   desc 'Verifica se é um arquivo válido'
   def process
     photo = model
-    file = photo.current_archive
 
-    unless file
+    unless photo.attach?
       add_error 'Deve passar um arquivo'
       set_status :red
       return
     end
 
-    ext = File.extname(file)
-    unless %w[.jpg .jpeg .gif .png .apng .svg .bmp .bmp .ico .png .ico].include?(ext.downcase)
-      add_error 'Extensão inválida.'
-      set_status :red
-      return
-    end
+    extension = photo.extension
+    return if %w[jpg jpeg gif png apng svg bmp bmp ico png ico].include?(extension.downcase)
 
-    begin
-      photo.attach(file)
-    rescue
-      add_error 'Arquivo inválido'
-      set_status :red
-    end
+    add_error 'Extensão inválida.'
+    set_status :red
   end
-
 end

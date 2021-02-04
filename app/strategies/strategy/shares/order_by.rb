@@ -1,5 +1,6 @@
-class Strategy::Shares::OrderBy < Strategy
+# frozen_string_literal: true
 
+class Strategy::Shares::OrderBy < Strategy
   def process
     order = bucket.dig(:filter, :order)&.with_indifferent_access || {}
 
@@ -18,7 +19,7 @@ class Strategy::Shares::OrderBy < Strategy
     end
 
     sort[:updated_at] = 'desc' unless sort.present?
-    self.data = self.data.order(sort)
+    self.data = data.order(sort)
   end
 
   desc <<~S

@@ -1,5 +1,6 @@
-class Strategy::BAMUploadToTransactions::CheckType < Strategy
+# frozen_string_literal: true
 
+class Strategy::BAMUploadToTransactions::CheckType < Strategy
   def process
     account = model.bam_account
     return unless account.type.present?

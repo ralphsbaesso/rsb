@@ -1,5 +1,6 @@
-class Strategy::BAMTransactions::CheckTransactionDate < Strategy
+# frozen_string_literal: true
 
+class Strategy::BAMTransactions::CheckTransactionDate < Strategy
   def process
     transaction = model
     date = transaction.transacted_at
@@ -19,10 +20,5 @@ class Strategy::BAMTransactions::CheckTransactionDate < Strategy
       add_error 'Data da transação inválida.'
       set_status :yellow
     end
-
-  end
-
-  def self.my_description
-
   end
 end

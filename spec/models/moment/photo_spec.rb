@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: moment_photos
@@ -5,7 +7,6 @@
 #  id              :bigint           not null, primary key
 #  description     :string
 #  metadata        :jsonb
-#  name            :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  account_user_id :bigint
@@ -40,19 +41,42 @@ RSpec.describe Moment::Photo, type: :model do
   describe 'business rules' do
     context 'insert' do
       it 'must attach a File' do
-      photo = build(:moment_photo, account_user: au, current_archive: path)
-      facade = Facade.new(account_user: au)
+        photo = build(:moment_photo, account_user: au)
+        photo.attach(path)
+        facade = Facade.new(account_user: au)
 
-      expect do
+        expect do
+          facade.insert photo
+          expect(facade.status_green?).to be_truthy
+        end.to change(Archive, :count).by(1)
+
+        expect(photo.extension).to eq('png')
+      end
+
+      it 'check if the photo already exists' do
+        photo = build(:moment_photo, account_user: au)
+        photo.attach(path)
+        facade = Facade.new(account_user: au)
         facade.insert photo
-        expect(facade.status_green?).to be_truthy
-      end.to change(Archive, :count).by(1)
+        photo_name = photo.name
+
+        photo1 = build(:moment_photo, account_user: au)
+        photo1.attach(path)
+        facade1 = Facade.new(account_user: au)
+
+        expect do
+          facade1.insert photo1
+          expect(facade1.status_green?).to be_falsey
+          expect(facade1.errors.first).to eq('Foto já existe nesta conta.')
+          expect(facade1.errors.last).to eq("Nome: #{photo_name}")
+        end.to change(Archive, :count).by(0)
       end
     end
 
     context 'update' do
       it 'modify attributes' do
-        photo = build(:moment_photo, account_user: au, current_archive: path)
+        photo = build(:moment_photo, account_user: au)
+        photo.attach(path)
         Facade.new(account_user: au).insert(photo)
 
         new_name = Faker::Name.name
@@ -66,12 +90,12 @@ RSpec.describe Moment::Photo, type: :model do
         expect(photo.name).to eq(new_name)
         expect(photo.description).to eq(new_description)
       end
-
     end
 
     context 'delete' do
       it 'decrease one Moment::Photo' do
-        photo = build(:moment_photo, account_user: au, current_archive: path)
+        photo = build(:moment_photo, account_user: au)
+        photo.attach(path)
         Facade.new(account_user: au).insert(photo)
 
         expect do
@@ -82,14 +106,34 @@ RSpec.describe Moment::Photo, type: :model do
         end.to change(Archive, :count).by(-1)
       end
 
+      it 'with label' do
+        photo = build(:moment_photo, account_user: au)
+        photo.attach(path)
+        Facade.new(account_user: au).insert(photo)
+
+        photo.labels << create(:label, account_user: au)
+        photo.labels << create(:label, account_user: au)
+
+        expect(AssociatedLabel.count).to eq(2)
+
+        expect do
+          expect do
+            facade = Facade.new(account_user: au)
+            facade.delete(photo)
+          end.to change(Moment::Photo, :count).by(-1)
+        end.to change(AssociatedLabel, :count).by(-2)
+      end
     end
 
     context 'select' do
       it 'all' do
-        photo = build(:moment_photo, account_user: au, current_archive: path)
+        photo = build(:moment_photo, account_user: au)
+        photo.attach(path)
         Facade.new(account_user: au).insert(photo)
-        photo2 = build(:moment_photo, account_user: au, current_archive: path2)
-        Facade.new(account_user: au).insert(photo2)
+
+        photo1 = build(:moment_photo, account_user: au)
+        photo1.attach(path2)
+        Facade.new(account_user: au).insert(photo1)
 
         facade = Facade.new(account_user: au)
         facade.select Moment::Photo
@@ -97,7 +141,8 @@ RSpec.describe Moment::Photo, type: :model do
       end
 
       it 'with label' do
-        photo = build(:moment_photo, account_user: au, current_archive: path)
+        photo = build(:moment_photo, account_user: au)
+        photo.attach(path)
         Facade.new(account_user: au).insert(photo)
 
         [2, 5, 6].sample.times do
@@ -115,7 +160,8 @@ RSpec.describe Moment::Photo, type: :model do
       end
 
       it 'by generic' do
-        photo = build(:moment_photo, account_user: au, current_archive: path)
+        photo = build(:moment_photo, account_user: au)
+        photo.attach(path)
         Facade.new(account_user: au).insert(photo)
 
         name = 'Timão subiu no ônibus em Marrocos'
@@ -144,8 +190,8 @@ RSpec.describe Moment::Photo, type: :model do
     attributes.each { |key, value| new_attributes[key.to_s] = value }
 
     clone = Moment::Photo.new(new_attributes)
+    clone.archive.content = '132456'
     clone.save
     clone
   end
-
 end

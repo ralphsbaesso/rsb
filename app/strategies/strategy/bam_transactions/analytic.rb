@@ -1,5 +1,6 @@
-class Strategy::BAMTransactions::Analytic < Strategy
+# frozen_string_literal: true
 
+class Strategy::BAMTransactions::Analytic < Strategy
   def process
     puts :'okkk!!'
     pp bucket
@@ -13,8 +14,7 @@ class Strategy::BAMTransactions::Analytic < Strategy
 
     # binding.pry
 
-
-    self.data = self.data.group(*fields).sum(:price_cents)
+    self.data = data.group(*fields).sum(:price_cents)
   end
 
   def self.my_description

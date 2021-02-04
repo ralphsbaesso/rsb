@@ -1,5 +1,6 @@
-class Strategy::BAMItems::CheckAssociation < Strategy
+# frozen_string_literal: true
 
+class Strategy::BAMItems::CheckAssociation < Strategy
   def process
     item = model
 

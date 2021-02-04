@@ -1,5 +1,6 @@
-class Strategy::Shares::SaveModel < Strategy
+# frozen_string_literal: true
 
+class Strategy::Shares::SaveModel < Strategy
   def process
     if status == :green
       model.save
@@ -13,7 +14,6 @@ class Strategy::Shares::SaveModel < Strategy
     else
       set_status :red
     end
-
   end
 
   desc <<~S

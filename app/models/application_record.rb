@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
@@ -8,7 +10,7 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def public_url(attach_name)
-    attach = attach_name.is_a?(ActiveStorage::Attachment) ? attach_name : self.send(attach_name)
+    attach = attach_name.is_a?(ActiveStorage::Attachment) ? attach_name : send(attach_name)
     # return nil unless attach.attached?
 
     if Rails.env.production?
@@ -17,6 +19,4 @@ class ApplicationRecord < ActiveRecord::Base
       Rails.application.routes.url_helpers.rails_blob_url(attach)
     end
   end
-
-
 end

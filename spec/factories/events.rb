@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: events
@@ -27,13 +29,13 @@
 FactoryBot.define do
   factory :event do
     account_user { nil }
-    rsb_module { "MyString" }
-    service { "MyString" }
-    message { "MyString" }
-    logger_type { "MyString" }
+    rsb_module { 'MyString' }
+    service { 'MyString' }
+    message { 'MyString' }
+    logger_type { 'MyString' }
     important { false }
-    origin { "MyString" }
-    action { "MyString" }
-    details { "" }
+    origin { 'MyString' }
+    action { 'MyString' }
+    details { '' }
   end
 end

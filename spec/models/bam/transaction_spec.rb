@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: bam_transactions
@@ -94,7 +96,6 @@ RSpec.describe BAM::Transaction, type: :model do
         expect(facade.errors.last).to eq('Deve associar a transação ao uma Conta.')
       end.to change(BAM::Transaction, :count).by(0)
     end
-
   end
 
   context 'update' do
@@ -114,7 +115,6 @@ RSpec.describe BAM::Transaction, type: :model do
       expect(transaction.price).to eq(new_price)
       expect(transaction.description).to eq(new_description)
     end
-
   end
 
   context 'delete' do
@@ -124,13 +124,11 @@ RSpec.describe BAM::Transaction, type: :model do
       expect do
         facade = Facade.new(account_user: au)
         facade.delete(transaction)
-        end.to change(BAM::Transaction, :count).by(-1)
+      end.to change(BAM::Transaction, :count).by(-1)
     end
-
   end
 
   context 'select' do
-
     it 'all' do
       size = [5, 7, 8].sample
       size.times do
@@ -196,7 +194,6 @@ RSpec.describe BAM::Transaction, type: :model do
     end
 
     context 'to analytic' do
-
       xit do
         bam_transaction = create(:bam_transaction, au: au, bam_account: bam_account, price_cents: 100)
         value = bam_transaction.price_cents
@@ -232,6 +229,5 @@ RSpec.describe BAM::Transaction, type: :model do
         expect(facade.data[bam_account2.id]).to eq(value2)
       end
     end
-
   end
 end

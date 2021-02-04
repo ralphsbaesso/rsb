@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateArchives < ActiveRecord::Migration[5.2]
   def change
     create_table :archives do |t|
@@ -10,5 +12,10 @@ class CreateArchives < ActiveRecord::Migration[5.2]
 
       t.timestamps
     end
+
+    add_index :archives, :md5
+    add_index :archives, :extension
+    add_index :archives, :size
+    add_index :archives, :filename
   end
 end

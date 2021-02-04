@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: bam_accounts
@@ -49,11 +51,11 @@ class BAM::Account < ApplicationRecord
   FIELDS = [
     {
       field: :transacted_at,
-      description: 'Campo data transação',
+      description: 'Campo data transação'
     },
     {
       field: :paid_at,
-      description: 'Campo data pagamento',
+      description: 'Campo data pagamento'
     },
     {
       field: :ignore,
@@ -61,11 +63,11 @@ class BAM::Account < ApplicationRecord
     },
     {
       field: :value,
-      description: 'Campo valor',
+      description: 'Campo valor'
     },
     {
       field: :reverse_value,
-      description: 'Campo valor invertido',
+      description: 'Campo valor invertido'
     },
     {
       field: :description,
@@ -84,6 +86,4 @@ class BAM::Account < ApplicationRecord
   def self.find_field(field)
     FIELDS.find { |f| f == field }
   end
-
-
 end

@@ -1,7 +1,7 @@
+# frozen_string_literal: true
+
 class Strategy::BAMTransactions::CheckDisassociate < Strategy
-
   def process
-
     current_transaction = bucket[:current_transaction]
 
     # checar se a transação a ser modificada é destino e está tentando apagar a transação origem
@@ -13,5 +13,4 @@ class Strategy::BAMTransactions::CheckDisassociate < Strategy
 
     true
   end
-
 end

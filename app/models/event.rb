@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: events
@@ -48,7 +50,6 @@ class Event < ApplicationRecord
       important: important.present?,
       details: details
     )
-
   rescue StandardError => e
     e
   end

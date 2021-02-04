@@ -1,5 +1,6 @@
-class Strategy::Shares::SaveWithoutChecking < Strategy
+# frozen_string_literal: true
 
+class Strategy::Shares::SaveWithoutChecking < Strategy
   def process
     model.save!
   end

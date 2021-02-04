@@ -1,5 +1,6 @@
-class Strategy::Labels::CheckApp < Strategy
+# frozen_string_literal: true
 
+class Strategy::Labels::CheckApp < Strategy
   def process
     apps = %w[bam book moment]
     label = model
@@ -8,6 +9,5 @@ class Strategy::Labels::CheckApp < Strategy
       add_error 'Precisa associar o Marcador num aplicativo válido.'
       set_status :red
     end
-
   end
 end

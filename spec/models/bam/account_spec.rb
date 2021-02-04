@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: bam_accounts
@@ -37,10 +39,8 @@ RSpec.describe BAM::Account, type: :model do
   end
 
   describe 'business rules' do
-
     context 'insert' do
       it 'increase one account' do
-
         account = build(:bam_account, au: au)
         facade = Facade.new(account_user: au)
         facade.insert(account)
@@ -81,7 +81,6 @@ RSpec.describe BAM::Account, type: :model do
 
     context 'delete' do
       it 'decrease one account' do
-
         account = create(:bam_account, au: au)
         expect do
           Facade.new(account_user: au).delete(account)
@@ -93,16 +92,15 @@ RSpec.describe BAM::Account, type: :model do
         create(:bam_transaction, au: au, bam_account: account)
 
         facade = Facade.new(account_user: au)
-        expect {
+        expect do
           facade.delete(account)
-        }.to change(Account, :count).by(0)
+        end.to change(Account, :count).by(0)
 
         expect(facade.status).to eq(:red)
       end
     end
 
     context 'select' do
-
       it 'return list of items' do
         amount = 10
         create_list(:bam_account, amount, au: au)
@@ -112,7 +110,5 @@ RSpec.describe BAM::Account, type: :model do
         expect(facade.data.count).to eq(amount)
       end
     end
-
   end
-
 end

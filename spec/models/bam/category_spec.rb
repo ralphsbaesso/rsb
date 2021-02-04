@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: bam_categories
@@ -78,11 +80,10 @@ RSpec.describe BAM::Category, type: :model do
 
     context 'delete' do
       it 'decrease one category' do
-
         category = create(:bam_category, au: au)
-        expect {
+        expect do
           Facade.new(account_user: au).delete(category)
-        }.to change(BAM::Category, :count).by(-1)
+        end.to change(BAM::Category, :count).by(-1)
 
         expect(Event.count).to eq(0)
       end
@@ -92,18 +93,17 @@ RSpec.describe BAM::Category, type: :model do
 
         bam_account = create(:bam_account, au: au)
         create(:bam_transaction, au: au, bam_category: category, bam_account: bam_account)
-        expect {
+        expect do
           facade = Facade.new(account_user: au)
           facade.delete(category)
           expect(facade.status).to eq(:red)
-        }.to change(BAM::Category, :count).by(0)
+        end.to change(BAM::Category, :count).by(0)
 
         expect(Event.count).to eq(0)
       end
     end
 
     context 'select' do
-
       it 'return list of Category' do
         amount = 10
         create_list(:bam_category, amount, au: au)
@@ -112,7 +112,5 @@ RSpec.describe BAM::Category, type: :model do
         expect(facade.data.count).to eq(amount)
       end
     end
-
   end
-
 end

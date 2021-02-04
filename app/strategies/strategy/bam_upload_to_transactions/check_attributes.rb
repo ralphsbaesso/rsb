@@ -1,5 +1,6 @@
-class Strategy::BAMUploadToTransactions::CheckAttributes < Strategy
+# frozen_string_literal: true
 
+class Strategy::BAMUploadToTransactions::CheckAttributes < Strategy
   def process
     upload = model
     errors = []
@@ -12,5 +13,4 @@ class Strategy::BAMUploadToTransactions::CheckAttributes < Strategy
     add_error errors
     set_status :red
   end
-
 end

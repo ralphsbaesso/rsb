@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class Admin::EventsController < AuthenticatorController
-  before_action :set_event, only: [:update, :destroy]
+  before_action :set_event, only: %i[update destroy]
 
   def index
     facade = Facade.new(account_user: current_account_user)
@@ -41,7 +43,6 @@ class Admin::EventsController < AuthenticatorController
     else
       render json: { errors: facade.errors }
     end
-
   end
 
   private
@@ -53,5 +54,4 @@ class Admin::EventsController < AuthenticatorController
   def set_event
     @event = current_account_user.events.find params[:id]
   end
-
 end

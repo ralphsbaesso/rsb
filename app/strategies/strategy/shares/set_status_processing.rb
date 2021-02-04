@@ -1,5 +1,6 @@
-class Strategy::Shares::SetStatusProcessing < Strategy
+# frozen_string_literal: true
 
+class Strategy::Shares::SetStatusProcessing < Strategy
   def process
     model.status = :processing
   end

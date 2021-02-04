@@ -1,5 +1,6 @@
-class Strategy::BAMUploadToTransactions::CheckSetting < Strategy
+# frozen_string_literal: true
 
+class Strategy::BAMUploadToTransactions::CheckSetting < Strategy
   def process
     account = model.bam_account
     fields = account.fields
