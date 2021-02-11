@@ -36,7 +36,7 @@ gem 'kaminari', '~> 1.2'
 # Integration of RubyMoney - Money with Rails
 gem 'money-rails', '~>1.12'
 
-gem 'rule_box'
+gem 'rule_box', '~> 0.1.2'
 
 gem 'pry', '~> 0.13.1'
 

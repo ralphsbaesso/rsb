@@ -16,6 +16,6 @@ RuleBox::Facade.configure do |config|
               type: :error,
               class_error: exception.class,
               backtrace: exception.backtrace,
-              facade: facade.as_json
+              facade: facade.to_s
   end
 end

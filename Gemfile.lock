@@ -258,7 +258,7 @@ DEPENDENCIES
   rails-erd
   rspec-rails (~> 4.0.0)
   rubocop
-  rule_box
+  rule_box (~> 0.1.2)
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data

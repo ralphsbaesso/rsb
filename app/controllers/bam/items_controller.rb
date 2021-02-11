@@ -4,7 +4,7 @@ class BAM::ItemsController < AuthenticatorController
   before_action :set_item, only: %i[show update destroy]
 
   def index
-    facade = build_facade.select BAM::Item
+    facade = build_facade.select BAM::Item, filter: params_to_hash
 
     if facade.status_green?
       render json: to_data(resource: facade.data, **params_to_hash)
