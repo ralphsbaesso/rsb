@@ -5,7 +5,7 @@ class BAM::TransactionsController < AuthenticatorController
 
   def index
     option_json = { include: associations }
-    option_json[:method] = :files unless params_to_hash[:without_meta]
+    option_json[:methods] = :files unless params_to_hash[:without_meta]
 
     facade = build_facade.select BAM::Transaction, filter: params_to_hash
 
