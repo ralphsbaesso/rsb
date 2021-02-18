@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+Rails.application.default_url_options = {
+  host: 'http://localhost:3001',
+  url_front_end: 'http://localhost:9090'
+}
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 

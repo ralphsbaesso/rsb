@@ -9,12 +9,18 @@ class ApplicationRecord < ActiveRecord::Base
     j
   end
 
-  def public_url(attach_name)
-    attach = attach_name.is_a?(ActiveStorage::Attachment) ? attach_name : send(attach_name)
-    # return nil unless attach.attached?
+  def public_url(attach_name, **options)
+    attach =
+      if attach_name.is_a?(ActiveStorage::Attached::One) || attach_name.is_a?(ActiveStorage::Attachment)
+        attach_name
+      else
+        self.send(attach_name)
+      end
 
-    if Rails.env.production?
-      attach.service_url
+    return if attach.respond_to?(:attached?) && !attach.attached?
+
+    if options[:expires_in].present?
+      attach.service_url expires_in: options[:expires_in]
     else
       Rails.application.routes.url_helpers.rails_blob_url(attach)
     end
